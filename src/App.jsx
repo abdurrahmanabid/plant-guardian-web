@@ -6,12 +6,13 @@ import {
   Outlet,
 } from "react-router-dom";
 import Home from "./pages/Home";
+import Navbar from "./components/Navbar";
 
 const App = () => {
   const AppLayout = () => {
     return (
       <>
-        <div className="">Nabbar</div>
+        <Navbar />
         <Outlet />
       </>
     );
