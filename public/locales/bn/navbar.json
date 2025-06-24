@@ -1,0 +1,7 @@
+{
+  "links": [
+    { "key": "home", "label": "হোম", "url": "/" },
+    { "key": "about", "label": "আমাদের সম্পর্কে", "url": "/about" },
+    { "key": "contact", "label": "যোগাযোগ", "url": "/contact" }
+  ]
+}

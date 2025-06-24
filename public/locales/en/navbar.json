@@ -1,0 +1,7 @@
+{
+  "links": [
+    { "key": "home", "label": "Home", "url": "/" },
+    { "key": "about", "label": "About", "url": "/about" },
+    { "key": "contact", "label": "Contact", "url": "/contact" }
+  ]
+}
