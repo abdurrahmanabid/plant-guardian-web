@@ -1,9 +1,17 @@
-import React from 'react'
+import React from "react";
+import HeroSection from "../section/HeroSection";
+import SplitText from "../components/SplitText";
 
 const Home = () => {
-  return (
-    <div>Home</div>
-  )
-}
+  const handleAnimationComplete = () => {
+    console.log("All letters have animated!");
+  };
 
-export default Home
+  return (
+    <>
+      <HeroSection />
+    </>
+  );
+};
+
+export default Home;
