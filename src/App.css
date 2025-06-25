@@ -1,21 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --bg: 11 6 31;           /* #0B061F */
-  --surface: 20 12 48;     /* Slightly lighter if needed */
-  --text: 255 255 255;     /* #FFFFFF */
-  --subtext: 176 168 192;  /* ~ #B0A8C0 */
-  --accent: 127 90 240;    /* #7F5AF0 */
+  --bg: 11 6 31; /* #0B061F */
+  --surface: 20 12 48; /* Slightly lighter if needed */
+  --text: 255 255 255; /* #FFFFFF */
+  --subtext: 176 168 192; /* ~ #B0A8C0 */
+  --accent: 127 90 240; /* #7F5AF0 */
   --highlight: 157 78 221; /* #9D4EDD */
-  --code: 0 255 188;       /* #00FFBC */
-  --font-sans : "Hind Siliguri",sans-serif;
+  --code: 0 255 188; /* #00FFBC */
+  --font-sans: "Hind Siliguri", sans-serif;
 }
+
+/* transition apply for all element  */
 
 @layer base {
   body {
     background-color: rgb(var(--bg)); /* Tailwind theme color: #0B061F */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 40' width='80' height='40'%3E%3Cpath fill='%23aed581' fill-opacity='0.04' d='M0 40a19.96 19.96 0 0 1 5.9-14.11 20.17 20.17 0 0 1 19.44-5.2A20 20 0 0 1 20.2 40H0zM65.32.75A20.02 20.02 0 0 1 40.8 25.26 20.02 20.02 0 0 1 65.32.76zM.07 0h20.1l-.08.07A20.02 20.02 0 0 1 .75 5.25 20.08 20.08 0 0 1 .07 0zm1.94 40h2.53l4.26-4.24v-9.78A17.96 17.96 0 0 0 2 40zm5.38 0h9.8a17.98 17.98 0 0 0 6.67-16.42L7.4 40zm3.43-15.42v9.17l11.62-11.59c-3.97-.5-8.08.3-11.62 2.42zm32.86-.78A18 18 0 0 0 63.85 3.63L43.68 23.8zm7.2-19.17v9.15L62.43 2.22c-3.96-.5-8.05.3-11.57 2.4zm-3.49 2.72c-4.1 4.1-5.81 9.69-5.13 15.03l6.61-6.6V6.02c-.51.41-1 .85-1.48 1.33zM17.18 0H7.42L3.64 3.78A18 18 0 0 0 17.18 0zM2.08 0c-.01.8.04 1.58.14 2.37L4.59 0H2.07z'%3E%3C/path%3E%3C/svg%3E");background-repeat: repeat;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 40' width='80' height='40'%3E%3Cpath fill='%23aed581' fill-opacity='0.04' d='M0 40a19.96 19.96 0 0 1 5.9-14.11 20.17 20.17 0 0 1 19.44-5.2A20 20 0 0 1 20.2 40H0zM65.32.75A20.02 20.02 0 0 1 40.8 25.26 20.02 20.02 0 0 1 65.32.76zM.07 0h20.1l-.08.07A20.02 20.02 0 0 1 .75 5.25 20.08 20.08 0 0 1 .07 0zm1.94 40h2.53l4.26-4.24v-9.78A17.96 17.96 0 0 0 2 40zm5.38 0h9.8a17.98 17.98 0 0 0 6.67-16.42L7.4 40zm3.43-15.42v9.17l11.62-11.59c-3.97-.5-8.08.3-11.62 2.42zm32.86-.78A18 18 0 0 0 63.85 3.63L43.68 23.8zm7.2-19.17v9.15L62.43 2.22c-3.96-.5-8.05.3-11.57 2.4zm-3.49 2.72c-4.1 4.1-5.81 9.69-5.13 15.03l6.61-6.6V6.02c-.51.41-1 .85-1.48 1.33zM17.18 0H7.42L3.64 3.78A18 18 0 0 0 17.18 0zM2.08 0c-.01.8.04 1.58.14 2.37L4.59 0H2.07z'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: repeat;
     background-size: auto;
     font-family: var(--font-sans);
     color: rgb(var(--text));
@@ -23,356 +26,356 @@
 }
 html,
 body {
-    width: 100%;
-    background-color: black;
-    color: white;
-    scroll-behavior: smooth;
-    overflow-x: hidden;
+  width: 100%;
+  background-color: black;
+  color: white;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 @utility flex-center {
-    @apply flex justify-center items-center;
+  @apply flex justify-center items-center;
 }
 
 @utility col-center {
-    @apply flex flex-col justify-center items-center;
+  @apply flex flex-col justify-center items-center;
 }
 
 @utility abs-center {
-    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+  @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
 }
 
 @utility text-gradient {
-    background: linear-gradient(to bottom, #ffffff, #898989);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+  background: linear-gradient(to bottom, #ffffff, #898989);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 @utility radial-gradient {
-    background: radial-gradient(
-            circle at center,
-            #434343 0%,
-            #000 50%,
-            transparent 100%
-    );
+  background: radial-gradient(
+    circle at center,
+    #434343 0%,
+    #000 50%,
+    transparent 100%
+  );
 }
 
 @utility masked-img {
-    mask-image: url("/images/mask-img.png");
-    mask-repeat: no-repeat;
-    mask-position: center;
-    mask-size: 50%;
+  mask-image: url("src/assets/img/image.png");
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: 50%;
 }
 
 @layer components {
-    main {
-        @apply w-full overflow-x-hidden;
+  main {
+    @apply w-full overflow-x-hidden;
+  }
+
+  nav {
+    @apply fixed z-50 w-full;
+
+    div {
+      @apply flex md:flex-row flex-col md:justify-between items-center gap-5 py-5 lg:px-0 px-5 container mx-auto;
     }
 
-    nav {
-        @apply fixed z-50 w-full;
+    p {
+      @apply text-3xl -mb-2;
+    }
+
+    a {
+      @apply cursor-pointer text-nowrap hover:text-green-300 md:text-base text-sm;
+    }
+
+    ul {
+      @apply flex-center lg:gap-12 gap-7;
+    }
+  }
+
+  .noisy {
+    @apply absolute inset-0 size-full bg-[url("/images/noise.png")];
+  }
+
+  #hero {
+    @apply relative z-10 min-h-dvh w-full border border-transparent;
+
+    h1 {
+      @apply md:mt-32 mt-40 text-8xl md:text-[20vw] leading-none text-center;
+    }
+
+    .left-leaf {
+      @apply absolute left-0 md:top-20 xl:top-36 2xl:top-52 md:bottom-auto -bottom-20 md:w-fit w-1/3;
+    }
+
+    .right-leaf {
+      @apply absolute right-0 md:bottom-0 xl:top-0 2xl:top-12 top-1/2 md:w-fit w-24;
+    }
+
+    .body {
+      @apply container mx-auto absolute left-1/2 -translate-x-1/2 lg:bottom-20 top-auto md:top-[30vh] flex justify-between items-end px-5;
+
+      .content {
+        @apply flex lg:flex-row flex-col w-full gap-10 justify-between items-center lg:items-end mx-auto;
+
+        p:nth-of-type(2) {
+          @apply text-6xl  max-w-xl;
+        }
+
+        p:last-of-type {
+          @apply 2xl:text-start text-center;
+        }
+
+        .view-cocktails {
+          @apply space-y-5 text-lg lg:max-w-2xs md:max-w-xs w-full;
+
+          p {
+            @apply text-left;
+          }
+
+          a {
+            @apply font-semibold opacity-80 2xl:text-start text-center;
+          }
+        }
+      }
+    }
+  }
+
+  video {
+    @apply w-full md:h-[80%] h-1/2 absolute bottom-0 left-0 md:object-contain object-bottom object-cover;
+  }
+
+  #cocktails {
+    @apply relative min-h-dvh w-full overflow-hidden;
+
+    #c-left-leaf {
+      @apply absolute left-0 md:bottom-0 md:top-auto -top-20 md:w-fit w-1/3;
+    }
+
+    #c-right-leaf {
+      @apply absolute right-0 md:bottom-0 md:top-auto -top-20 md:w-fit w-1/3;
+    }
+
+    .list {
+      @apply container mx-auto relative z-10 flex md:flex-row flex-col justify-between items-start gap-20 pt-40 2xl:px-0 px-5;
+
+      .popular {
+        @apply space-y-8 w-full md:w-fit;
+      }
+
+      .loved {
+        @apply space-y-8 w-full md:w-fit pb-20 md:pb-0;
+      }
+
+      h2 {
+        @apply text-xl font-medium;
+      }
+
+      ul {
+        @apply space-y-8;
+
+        li {
+          @apply flex justify-between items-start;
+
+          h3 {
+            @apply 2xl:text-3xl text-xl;
+          }
+
+          p {
+            @apply text-sm;
+          }
+
+          span {
+            @apply text-xl font-medium;
+          }
+        }
+      }
+    }
+  }
+
+  #about {
+    @apply min-h-screen py-28 2xl:px-0 px-5 container mx-auto;
+
+    .content {
+      @apply grid grid-cols-1 lg:grid-cols-12 gap-5;
+
+      h2 {
+        @apply text-5xl md:text-6xl  max-w-lg;
+      }
+
+      .sub-content {
+        @apply md:col-span-4 space-y-5 flex flex-col justify-between;
+
+        p {
+          @apply text-lg;
+        }
 
         div {
-            @apply flex md:flex-row flex-col md:justify-between items-center gap-5 py-5 lg:px-0 px-5 container mx-auto;
+          @apply flex flex-col justify-between md:gap-2 gap-5;
+
+          span {
+            @apply font-bold text-5xl;
+          }
+        }
+      }
+    }
+
+    .badge {
+      @apply inline-block rounded-full bg-white text-black px-4 py-2 text-sm font-medium mb-8;
+    }
+
+    .top-grid {
+      @apply grid grid-cols-1 xl:grid-cols-12 gap-5 mb-5 md:px-0 px-5;
+
+      > div {
+        @apply rounded-3xl overflow-hidden h-72 relative;
+      }
+
+      img {
+        @apply object-cover w-full h-full;
+      }
+    }
+
+    .bottom-grid {
+      @apply grid grid-cols-1 md:grid-cols-12 gap-5 md:px-0 px-5;
+
+      > div {
+        @apply rounded-3xl overflow-hidden h-72 relative;
+      }
+
+      img {
+        @apply object-cover w-full h-full;
+      }
+    }
+  }
+
+  #art {
+    @apply flex-center flex-col min-h-dvh p-5 mt-20 relative radial-gradient;
+
+    h2 {
+      @apply relative md:text-[20vw] text-8xl text-nowrap leading-none  text-center text-[#505050] mb-8;
+    }
+
+    .content {
+      @apply flex md:flex-row flex-col justify-between md:mb-16 md:mt-0 mt-40 gap-10;
+    }
+
+    .cocktail-img {
+      @apply md:w-[60vw] w-full h-[50vh] md:h-[70vh] rounded-4xl overflow-hidden absolute top-0 md:top-1/2 md:-translate-y-1/2 left-1/2 -translate-x-1/2;
+    }
+
+    .masked-container {
+      h2 {
+        @apply text-4xl md:text-5xl  text-center mb-10 text-white mt-32;
+      }
+
+      div {
+        @apply opacity-0 md:px-0 px-5 space-y-5 absolute md:bottom-5 bottom-52 left-1/2 -translate-x-1/2;
+
+        h3 {
+          @apply md:text-5xl text-2xl text-center font-serif md:w-full w-80 text-white;
         }
 
         p {
-            @apply  text-3xl -mb-2;
+          @apply text-lg text-center;
         }
+      }
+    }
+  }
 
-        a {
-            @apply cursor-pointer text-nowrap hover:text-green-300 md:text-base text-sm;
-        }
+  #menu {
+    @apply relative w-full md:mt-40 mt-0 2xl:px-0 px-5 py-20 radial-gradient;
 
-        ul {
-            @apply flex-center lg:gap-12 gap-7;
-        }
+    #m-left-leaf {
+      @apply object-contain absolute -bottom-20 left-0 md:w-fit w-1/3;
     }
 
-    .noisy {
-        @apply absolute inset-0 size-full bg-[url("/images/noise.png")];
+    #m-right-leaf {
+      @apply object-contain absolute -top-40 right-0 md:w-fit w-1/4;
     }
 
-    #hero {
-        @apply relative z-10 min-h-dvh w-full border border-transparent;
+    .cocktail-tabs {
+      @apply grid md:grid-cols-4 grid-cols-2 md:gap-20 gap-10 sm:mb-32 mb-20 relative z-10 md:max-w-6xl md:mx-auto;
 
-        h1 {
-            @apply md:mt-32 mt-40 text-8xl md:text-[20vw] leading-none text-center ;
-        }
-
-        .left-leaf {
-            @apply absolute left-0 md:top-20 xl:top-36 2xl:top-52 md:bottom-auto -bottom-20 md:w-fit w-1/3;
-        }
-
-        .right-leaf {
-            @apply absolute right-0 md:bottom-0 xl:top-0 2xl:top-12 top-1/2 md:w-fit w-24;
-        }
-
-        .body {
-            @apply container mx-auto absolute left-1/2 -translate-x-1/2 lg:bottom-20 top-auto md:top-[30vh] flex justify-between items-end px-5;
-
-            .content {
-                @apply flex lg:flex-row flex-col w-full gap-10 justify-between items-center lg:items-end mx-auto;
-
-                p:nth-of-type(2) {
-                    @apply  text-6xl  max-w-xl;
-                }
-
-                p:last-of-type {
-                    @apply 2xl:text-start text-center;
-                }
-
-                .view-cocktails {
-                    @apply space-y-5 text-lg lg:max-w-2xs md:max-w-xs w-full;
-
-                    p {
-                        @apply text-left;
-                    }
-
-                    a {
-                        @apply font-semibold opacity-80 2xl:text-start text-center;
-                    }
-                }
-            }
-        }
+      button {
+        @apply md:text-3xl text-xl pb-2 cursor-pointer hover:text-amber-300 border-b-1 transition-colors;
+      }
     }
 
-    video {
-        @apply w-full md:h-[80%] h-1/2 absolute bottom-0 left-0 md:object-contain object-bottom object-cover;
+    .content {
+      @apply flex flex-col justify-between items-center container mx-auto relative;
+
+      .arrows {
+        @apply flex items-center justify-between w-full absolute;
+
+        button {
+          @apply text-white cursor-pointer transition-colors max-w-36;
+
+          span {
+            @apply text-3xl  leading-none hidden md:block;
+          }
+        }
+      }
     }
 
-    #cocktails {
-        @apply relative min-h-dvh w-full overflow-hidden;
+    .cocktail {
+      @apply flex-center mt-10;
 
-        #c-left-leaf {
-            @apply absolute left-0 md:bottom-0 md:top-auto -top-20 md:w-fit w-1/3;
-        }
-
-        #c-right-leaf {
-            @apply absolute right-0 md:bottom-0 md:top-auto -top-20 md:w-fit w-1/3;
-        }
-
-        .list {
-            @apply container mx-auto relative z-10 flex md:flex-row flex-col justify-between items-start gap-20 pt-40 2xl:px-0 px-5;
-
-            .popular {
-                @apply space-y-8 w-full md:w-fit;
-            }
-
-            .loved {
-                @apply space-y-8 w-full md:w-fit pb-20 md:pb-0;
-            }
-
-            h2 {
-                @apply text-xl font-medium;
-            }
-
-            ul {
-                @apply space-y-8;
-
-                li {
-                    @apply flex justify-between items-start;
-
-                    h3 {
-                        @apply  2xl:text-3xl text-xl ;
-                    }
-
-                    p {
-                        @apply text-sm;
-                    }
-
-                    span {
-                        @apply text-xl font-medium;
-                    }
-                }
-            }
-        }
+      img {
+        @apply object-contain h-[60vh];
+      }
     }
 
-    #about {
-        @apply min-h-screen py-28 2xl:px-0 px-5 container mx-auto;
+    .recipe {
+      @apply flex max-md:flex-col gap-10 md:items-center justify-between w-full lg:absolute bottom-0;
 
-        .content {
-            @apply grid grid-cols-1 lg:grid-cols-12 gap-5;
+      .info {
+        @apply space-y-4 lg:translate-y-20;
+      }
 
-            h2 {
-                @apply text-5xl md:text-6xl  max-w-lg;
-            }
-
-            .sub-content {
-                @apply md:col-span-4 space-y-5 flex flex-col justify-between;
-
-                p {
-                    @apply text-lg;
-                }
-
-                div {
-                    @apply flex flex-col justify-between md:gap-2 gap-5;
-
-                    span {
-                        @apply  font-bold text-5xl;
-                    }
-                }
-            }
-        }
-
-        .badge {
-            @apply inline-block rounded-full bg-white text-black px-4 py-2 text-sm font-medium mb-8;
-        }
-
-        .top-grid {
-            @apply grid grid-cols-1 xl:grid-cols-12 gap-5 mb-5 md:px-0 px-5;
-
-            > div {
-                @apply rounded-3xl overflow-hidden h-72 relative;
-            }
-
-            img {
-                @apply object-cover w-full h-full;
-            }
-        }
-
-        .bottom-grid {
-            @apply grid grid-cols-1 md:grid-cols-12 gap-5 md:px-0 px-5;
-
-            > div {
-                @apply rounded-3xl overflow-hidden h-72 relative;
-            }
-
-            img {
-                @apply object-cover w-full h-full;
-            }
-        }
-    }
-
-    #art {
-        @apply flex-center flex-col min-h-dvh p-5 mt-20 relative radial-gradient;
+      .details {
+        @apply space-y-5 md:max-w-md text-left;
 
         h2 {
-            @apply relative md:text-[20vw] text-8xl text-nowrap leading-none  text-center text-[#505050] mb-8;
+          @apply md:text-5xl text-3xl font-serif;
         }
 
-        .content {
-            @apply flex md:flex-row flex-col justify-between md:mb-16 md:mt-0 mt-40 gap-10;
+        p {
+          @apply md:text-lg pe-5;
         }
+      }
+    }
+  }
 
-        .cocktail-img {
-            @apply md:w-[60vw] w-full h-[50vh] md:h-[70vh] rounded-4xl overflow-hidden absolute top-0 md:top-1/2 md:-translate-y-1/2 left-1/2 -translate-x-1/2;
-        }
+  #contact {
+    @apply relative md:mt-20 mt-0 px-4 text-center w-full overflow-hidden radial-gradient;
 
-        .masked-container {
-            h2 {
-                @apply text-4xl md:text-5xl  text-center mb-10 text-white mt-32;
-            }
-
-            div {
-                @apply opacity-0 md:px-0 px-5 space-y-5 absolute md:bottom-5 bottom-52 left-1/2 -translate-x-1/2;
-
-                h3 {
-                    @apply md:text-5xl text-2xl text-center font-serif md:w-full w-80 text-white;
-                }
-
-                p {
-                    @apply text-lg text-center;
-                }
-            }
-        }
+    #f-left-leaf {
+      @apply absolute bottom-0 left-0 pointer-events-none lg:w-fit w-1/3;
     }
 
-    #menu {
-        @apply relative w-full md:mt-40 mt-0 2xl:px-0 px-5 py-20 radial-gradient;
-
-        #m-left-leaf {
-            @apply object-contain absolute -bottom-20 left-0 md:w-fit w-1/3;
-        }
-
-        #m-right-leaf {
-            @apply object-contain absolute -top-40 right-0 md:w-fit w-1/4;
-        }
-
-        .cocktail-tabs {
-            @apply grid md:grid-cols-4 grid-cols-2 md:gap-20 gap-10 sm:mb-32 mb-20 relative z-10 md:max-w-6xl md:mx-auto;
-
-            button {
-                @apply md:text-3xl text-xl pb-2 cursor-pointer hover:text-amber-300 border-b-1 transition-colors ;
-            }
-        }
-
-        .content {
-            @apply flex flex-col justify-between items-center container mx-auto relative;
-
-            .arrows {
-                @apply flex items-center justify-between w-full absolute;
-
-                button {
-                    @apply text-white cursor-pointer transition-colors max-w-36;
-
-                    span {
-                        @apply text-3xl  leading-none hidden md:block;
-                    }
-                }
-            }
-        }
-
-        .cocktail {
-            @apply flex-center mt-10;
-
-            img {
-                @apply object-contain h-[60vh];
-            }
-        }
-
-        .recipe {
-            @apply flex max-md:flex-col gap-10 md:items-center justify-between w-full lg:absolute bottom-0;
-
-            .info {
-                @apply space-y-4 lg:translate-y-20;
-            }
-
-            .details {
-                @apply space-y-5 md:max-w-md text-left;
-
-                h2 {
-                    @apply md:text-5xl text-3xl font-serif;
-                }
-
-                p {
-                    @apply md:text-lg pe-5;
-                }
-            }
-        }
+    #f-right-leaf {
+      @apply absolute top-0 right-0 pointer-events-none hidden lg:block;
     }
 
-    #contact {
-        @apply relative md:mt-20 mt-0 px-4 text-center w-full overflow-hidden radial-gradient;
+    .content {
+      @apply container mx-auto lg:py-14 2xl:py-32 py-16 flex flex-col justify-between gap-10 min-h-dvh;
 
-        #f-left-leaf {
-            @apply absolute bottom-0 left-0 pointer-events-none lg:w-fit w-1/3;
-        }
+      h2 {
+        @apply lg:text-6xl 2xl:text-8xl text-5xl  md:translate-y-0 translate-y-5;
+      }
 
-        #f-right-leaf {
-            @apply absolute top-0 right-0 pointer-events-none hidden lg:block;
-        }
+      h3 {
+        @apply uppercase xl:text-base 2xl:text-lg text-base mb-2;
+      }
 
-        .content {
-            @apply container mx-auto lg:py-14 2xl:py-32 py-16 flex flex-col justify-between gap-10 min-h-dvh;
-
-            h2 {
-                @apply lg:text-6xl 2xl:text-8xl text-5xl  md:translate-y-0 translate-y-5;
-            }
-
-            h3 {
-                @apply uppercase xl:text-base 2xl:text-lg text-base mb-2;
-            }
-
-            p {
-                @apply lg:text-2xl 2xl:text-3xl text-sm;
-            }
-        }
-
-        .drink-img {
-            @apply absolute bottom-0 right-0 lg:w-96 w-1/3 pointer-events-none;
-        }
+      p {
+        @apply lg:text-2xl 2xl:text-3xl text-sm;
+      }
     }
+
+    .drink-img {
+      @apply absolute bottom-0 right-0 lg:w-96 w-1/3 pointer-events-none;
+    }
+  }
 }

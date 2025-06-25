@@ -49,8 +49,8 @@ const HeroSection = () => {
           scrub: true,
         },
       })
-      .to(".right-leaf", { y: 200 }, 0)
-      .to(".left-leaf", { y: -200 }, 0)
+      .to(".right-leaf", { y: 300 }, 0)
+      .to(".left-leaf", { y: -300 }, 0)
       .to(".arrow", { y: 100 }, 0);
 
     const startValue = isMobile ? "top 50%" : "center 60%";
@@ -76,7 +76,7 @@ const HeroSection = () => {
   return (
     <>
       <section id="hero" className="noisy">
-        <h1 className="title text-[170px]">{t("siteName")}</h1>
+        <h1 className="title text-[50px] md:text-[170px]">{t("siteName")}</h1>
 
         <img src={leftLeaf} alt="left-leaf" className="left-leaf" />
         <img src={rightLeaf} alt="right-leaf" className="right-leaf" />

@@ -1,15 +1,13 @@
-import React from "react";
 import HeroSection from "../section/HeroSection";
-import SplitText from "../components/SplitText";
+import AboutUs from "../components/AboutUs";
+import HowTo from "../components/HowTo";
 
 const Home = () => {
-  const handleAnimationComplete = () => {
-    console.log("All letters have animated!");
-  };
-
   return (
     <>
       <HeroSection />
+      <HowTo />
+      <AboutUs />
     </>
   );
 };

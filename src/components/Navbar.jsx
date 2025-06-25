@@ -51,28 +51,37 @@ const Navbar = () => {
   };
 
   return (
-    <nav>
-      <div>
+    <nav className="fixed top-0 w-full z-50 bg-[#0b061f]/40 backdrop-blur-md shadow-md border-b border-white/10">
+      <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
         <a href="#home" className="flex items-center gap-2">
-          <img src={logo} alt="logo" height={70} width={70} />
-          <p>{t("common:siteName")}</p>
+          <img src={logo} alt="logo" height={32} width={32} />
+          <p className="text-white font-semibold text-base">
+            {t("common:siteName")}
+          </p>
         </a>
 
-        <ul>
+        <ul className="flex items-center gap-4 text-white font-medium text-sm">
           {links.map((link) => (
             <li key={link.key}>
-              <a href={`#${link.key}`}>{link.label}</a>
+              <a href={`#${link.key}`} className="hover:text-accent transition">
+                {link.label}
+              </a>
             </li>
           ))}
-          <div className="flex items-center">
-            <Globe className="text-white w-5 h-5" />
+
+          <div className="flex items-center gap-1">
+            <Globe className="text-white w-4 h-4" />
             <select
-              className="text-white bg-gray-800 p-2 rounded"
+              className="text-white bg-transparent p-1 rounded outline-none"
               value={selectedLang}
               onChange={handleLanguageChange}
             >
               {language.map((lang) => (
-                <option key={lang.code} value={lang.code}>
+                <option
+                  key={lang.code}
+                  value={lang.code}
+                  className="text-black"
+                >
                   {lang.flag} {lang.name}
                 </option>
               ))}
