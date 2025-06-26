@@ -5,6 +5,7 @@ import { useMediaQuery } from "react-responsive";
 import leftLeaf from "../assets/img/hero-left-leaf.png";
 import rightLeaf from "../assets/img/hero-right-leaf.png";
 import { useTranslation } from "react-i18next";
+import Button from "../components/Button";
 
 const HeroSection = () => {
   const { t } = useTranslation();
@@ -92,9 +93,9 @@ const HeroSection = () => {
 
             <div className="view-cocktails">
               <p className="subtitle">{hero("right-text")}</p>
-              <a href="#cocktails" className="hover:text-green-300">
+              <Button speed="5s" thickness={3}>
                 {hero("right-button")}
-              </a>
+              </Button>
             </div>
           </div>
         </div>

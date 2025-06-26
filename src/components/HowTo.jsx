@@ -1,4 +1,3 @@
-import React from "react";
 import Sector from "./Sector";
 import { useTranslation } from "react-i18next";
 
