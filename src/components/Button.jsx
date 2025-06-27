@@ -4,6 +4,7 @@ const Button = ({
   color = "green",
   speed = "6s",
   thickness = 1,
+  onClick,
   children,
   ...rest
 }) => {
@@ -14,6 +15,7 @@ const Button = ({
         padding: `${thickness}px 0`,
         ...rest.style,
       }}
+      onClick={onClick}
       {...rest}
     >
       <div

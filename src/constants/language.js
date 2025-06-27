@@ -9,4 +9,4 @@ export const language = [
     name: "বাংলা",
     flag: "🇧🇩"
   }
-]
+]; 

@@ -2,7 +2,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import logo from "../assets/img/logo-no-bg.png";
 import { Globe } from "lucide-react";
-import { language } from "../../constant/language.js";
+import { language } from "../constants/language.js";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";

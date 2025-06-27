@@ -6,7 +6,9 @@ import "./i18n.js"; // Importing i18n configuration
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <React.Suspense fallback={<div>Loading...</div>}>
+    <React.Suspense
+      fallback={<div className="h-screen flex-center">Loading...</div>}
+    >
       <App />
     </React.Suspense>
   </StrictMode>
