@@ -13,6 +13,7 @@ export { default as Sector } from './Sector';
 export { default as Orb } from './Orb';
 export { default as BlurText } from './BlurText';
 export { default as SplitText } from './SplitText';
+export { default as Modal } from './Modal';
 
 // Content Components
 export { default as HowTo } from './HowTo';
