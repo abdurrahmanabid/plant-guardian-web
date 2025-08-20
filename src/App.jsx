@@ -10,6 +10,7 @@ import Navbar from "./components/Navbar";
 import AnimatedForm from "./components/AnimatedForm";
 import Registration from "./pages/Registration";
 import RegistrationForm from "./pages/Registration";
+import LoginForm from "./pages/Login";
 
 const App = () => {
   const AppLayout = () => {
@@ -28,6 +29,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/soil-analysis" element={<AnimatedForm />} />
           <Route path="/registration" element={<RegistrationForm />} />
+          <Route path="/login" element={<LoginForm />} />
         </Route>
       </Routes>
     </Router>
