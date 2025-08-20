@@ -1,0 +1,15 @@
+{
+  "subject": "অথেনটিকেশন",
+  "option": [
+    {
+      "id": 1,
+      "label": "লগইন",
+      "link": "/login"
+    },
+    {
+      "id": 2,
+      "label": "রেজিস্ট্রেশন",
+      "link": "/registration"
+    }
+  ]
+}

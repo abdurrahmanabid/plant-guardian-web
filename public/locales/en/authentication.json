@@ -1,0 +1,15 @@
+{
+  "subject":"Authentication",
+  "authentication":[
+    {
+      "id":1,
+      "label":"Login",
+      "link":"/login"
+    },
+    {
+      "id":2,
+      "label":"Registration",
+      "link":"/registration"
+    }
+  ]
+}
