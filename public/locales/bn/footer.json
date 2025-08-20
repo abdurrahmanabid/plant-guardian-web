@@ -1,0 +1,50 @@
+{
+  "tagline": "স্মার্ট কৃষি সমাধান—সঠিক সিদ্ধান্তের জন্য।",
+  "links": [
+    {
+      "title": "এক্সপ্লোর",
+      "items": [
+        { "label": "হোম", "to": "#home" },
+        { "label": "ফিচারস", "to": "#features" },
+        { "label": "প্রাইসিং", "to": "#pricing" }
+      ]
+    },
+    {
+      "title": "কোম্পানি",
+      "items": [
+        { "label": "আমাদের সম্পর্কে", "to": "#about" },
+        { "label": "ব্লগ", "to": "#blog" },
+        { "label": "ক্যারিয়ার", "to": "#careers" }
+      ]
+    },
+    {
+      "title": "সাপোর্ট",
+      "items": [
+        { "label": "হেল্প সেন্টার", "to": "#faq" },
+        { "label": "যোগাযোগ", "to": "#contact" },
+        { "label": "সিস্টেম স্ট্যাটাস", "to": "/status" }
+      ]
+    }
+  ],
+  "newsletter": {
+    "title": "নিউজলেটার",
+    "subtitle": "প্রোডাক্ট আপডেট ও কৃষি টিপস পেতে সাবস্ক্রাইব করুন।",
+    "placeholder": "আপনার ইমেইল দিন",
+    "success": "ধন্যবাদ! শীঘ্রই আপডেট পাবেন।"
+  },
+  "contact": {
+    "email": "abdurrahmanabid33@gmail.com",
+    "phone": "+8801613362862",
+    "address": "চট্টগ্রাম, বাংলাদেশ",
+    "socials": {
+      "facebook": "#",
+      "twitter": "#",
+      "instagram": "#",
+      "github": "#"
+    }
+  },
+  "allRights": "সমস্ত অধিকার সংরক্ষিত।",
+  "privacy": "প্রাইভেসি",
+  "terms": "টার্মস",
+  "status": "স্ট্যাটাস"
+}

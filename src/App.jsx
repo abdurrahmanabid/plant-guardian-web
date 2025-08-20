@@ -11,6 +11,7 @@ import AnimatedForm from "./components/AnimatedForm";
 import Registration from "./pages/Registration";
 import RegistrationForm from "./pages/Registration";
 import LoginForm from "./pages/Login";
+import Footer from "./components/Footer";
 
 const App = () => {
   const AppLayout = () => {
@@ -19,6 +20,7 @@ const App = () => {
         <Navbar />
         {/* <div className="h-30" /> */}
         <Outlet />
+        <Footer />
       </>
     );
   };

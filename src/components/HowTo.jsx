@@ -18,10 +18,18 @@ const HowTo = () => {
 
   useGSAP(() => {
     // Initial entrance animation
-    gsap.set([titleRef.current, descRef.current, ...modesRef.current, footerRef.current], {
-      opacity: 0,
-      y: 50
-    });
+    gsap.set(
+      [
+        titleRef.current,
+        descRef.current,
+        ...modesRef.current,
+        footerRef.current,
+      ],
+      {
+        opacity: 0,
+        y: 50,
+      }
+    );
 
     // Staggered entrance animation
     const tl = gsap.timeline({
@@ -29,35 +37,47 @@ const HowTo = () => {
         trigger: containerRef.current,
         start: "top 80%",
         end: "bottom 20%",
-        toggleActions: "play none none reverse"
-      }
+        toggleActions: "play none none reverse",
+      },
     });
 
     tl.to(titleRef.current, {
       opacity: 1,
       y: 0,
       duration: 1,
-      ease: "back.out(1.7)"
+      ease: "back.out(1.7)",
     })
-    .to(descRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      ease: "back.out(1.7)"
-    }, "-=0.6")
-    .to(modesRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 0.8,
-      stagger: 0.2,
-      ease: "back.out(1.7)"
-    }, "-=0.4")
-    .to(footerRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      ease: "back.out(1.7)"
-    }, "-=0.6");
+      .to(
+        descRef.current,
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "back.out(1.7)",
+        },
+        "-=0.6"
+      )
+      .to(
+        modesRef.current,
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.2,
+          ease: "back.out(1.7)",
+        },
+        "-=0.4"
+      )
+      .to(
+        footerRef.current,
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "back.out(1.7)",
+        },
+        "-=0.6"
+      );
 
     // Hover animations for mode cards
     modesRef.current.forEach((mode, index) => {
@@ -65,7 +85,7 @@ const HowTo = () => {
         gsap.to(mode, {
           scale: 1.05,
           duration: 0.3,
-          ease: "power2.out"
+          ease: "power2.out",
         });
       });
 
@@ -73,7 +93,7 @@ const HowTo = () => {
         gsap.to(mode, {
           scale: 1,
           duration: 0.3,
-          ease: "power2.out"
+          ease: "power2.out",
         });
       });
     });
@@ -86,10 +106,9 @@ const HowTo = () => {
         trigger: containerRef.current,
         start: "top bottom",
         end: "bottom top",
-        scrub: true
-      }
+        scrub: true,
+      },
     });
-
   }, []);
 
   const modes = [
@@ -100,7 +119,7 @@ const HowTo = () => {
       footer: t("mode_1_footer"),
       button: t("mode_1_button"),
       icon: "🔍",
-      gradient: "from-blue-500 to-cyan-500"
+      gradient: "from-blue-500 to-cyan-500",
     },
     {
       title: t("mode_2_title"),
@@ -109,7 +128,7 @@ const HowTo = () => {
       footer: t("mode_2_footer"),
       button: t("mode_2_button"),
       icon: "🌱",
-      gradient: "from-green-500 to-emerald-500"
+      gradient: "from-green-500 to-emerald-500",
     },
     {
       title: t("mode_3_title"),
@@ -118,12 +137,15 @@ const HowTo = () => {
       footer: t("mode_3_footer"),
       button: t("mode_3_button"),
       icon: "🚀",
-      gradient: "from-purple-500 to-pink-500"
-    }
+      gradient: "from-purple-500 to-pink-500",
+    },
   ];
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
+    <div
+      ref={containerRef}
+      className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden"
+    >
       {/* Background Elements */}
       <div className="how-to-bg absolute inset-0 opacity-10">
         <div className="absolute top-20 left-20 w-32 h-32 bg-blue-500 rounded-full blur-3xl"></div>
@@ -134,13 +156,13 @@ const HowTo = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-16 lg:py-24">
         {/* Header Section */}
         <div className="text-center mb-16 lg:mb-20">
-          <h1 
+          <h1
             ref={titleRef}
             className="text-4xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 text-gradient"
           >
             {t("how_to_use")}
           </h1>
-          <p 
+          <p
             ref={descRef}
             className="text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed"
           >
@@ -153,11 +175,13 @@ const HowTo = () => {
           {modes.map((mode, index) => (
             <div
               key={index}
-              ref={el => modesRef.current[index] = el}
+              ref={(el) => (modesRef.current[index] = el)}
               className="group bg-black/40 backdrop-blur-sm rounded-2xl p-6 lg:p-8 border border-gray-800 hover:border-gray-600 transition-all duration-500 cursor-pointer"
             >
               {/* Icon */}
-              <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${mode.gradient} flex items-center justify-center mb-6 text-2xl lg:text-3xl shadow-lg`}>
+              <div
+                className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${mode.gradient} flex items-center justify-center mb-6 text-2xl lg:text-3xl shadow-lg`}
+              >
                 {mode.icon}
               </div>
 
@@ -175,7 +199,9 @@ const HowTo = () => {
               <div className="space-y-3 mb-6">
                 {mode.steps.map((step, stepIndex) => (
                   <div key={stepIndex} className="flex items-start space-x-3">
-                    <div className={`w-6 h-6 rounded-full bg-gradient-to-r ${mode.gradient} flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-0.5`}>
+                    <div
+                      className={`w-6 h-6 rounded-full bg-gradient-to-r ${mode.gradient} flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-0.5`}
+                    >
                       {stepIndex + 1}
                     </div>
                     <p className="text-gray-300 text-sm leading-relaxed">
@@ -186,12 +212,12 @@ const HowTo = () => {
               </div>
 
               {/* Footer */}
-              <p className="text-gray-500 text-sm mb-6 italic">
-                {mode.footer}
-              </p>
+              <p className="text-gray-500 text-sm mb-6 italic">{mode.footer}</p>
 
               {/* Button */}
-              <button className={`w-full py-3 px-6 bg-gradient-to-r ${mode.gradient} text-white font-semibold rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-sm lg:text-base`}>
+              <button
+                className={`w-full py-3 px-6 bg-gradient-to-r ${mode.gradient} text-white font-semibold rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-sm lg:text-base`}
+              >
                 {mode.button}
               </button>
             </div>
@@ -199,10 +225,7 @@ const HowTo = () => {
         </div>
 
         {/* Footer Note */}
-        <div 
-          ref={footerRef}
-          className="text-center"
-        >
+        <div ref={footerRef} className="text-center">
           <p className="text-gray-400 text-sm lg:text-base italic">
             {t("footer_note")}
           </p>

@@ -8,8 +8,6 @@ const Home = () => {
     <>
       <HeroSection />
       <HowTo />
-      <AboutUs />
-      <AnimatedForm />
     </>
   );
 };

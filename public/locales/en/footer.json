@@ -1,0 +1,50 @@
+{
+  "tagline": "Smart agriculture tools for better decisions.",
+  "links": [
+    {
+      "title": "Explore",
+      "items": [
+        { "label": "Home", "to": "#home" },
+        { "label": "Features", "to": "#features" },
+        { "label": "Pricing", "to": "#pricing" }
+      ]
+    },
+    {
+      "title": "Company",
+      "items": [
+        { "label": "About", "to": "#about" },
+        { "label": "Blog", "to": "#blog" },
+        { "label": "Careers", "to": "#careers" }
+      ]
+    },
+    {
+      "title": "Support",
+      "items": [
+        { "label": "Help Center", "to": "#faq" },
+        { "label": "Contact", "to": "#contact" },
+        { "label": "System Status", "to": "/status" }
+      ]
+    }
+  ],
+  "newsletter": {
+    "title": "Newsletter",
+    "subtitle": "Get product updates and agronomy tips in your inbox.",
+    "placeholder": "Enter your email",
+    "success": "Thanks! You'll hear from us soon."
+  },
+  "contact": {
+    "email": "abdurrahmanabid33@gmail.com",
+    "phone": "+8801613362862",
+    "address": "Chittagongh, Bangladesh",
+    "socials": {
+      "facebook": "#",
+      "twitter": "#",
+      "instagram": "#",
+      "github": "#"
+    }
+  },
+  "allRights": "All rights reserved.",
+  "privacy": "Privacy",
+  "terms": "Terms",
+  "status": "Status"
+}

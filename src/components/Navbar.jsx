@@ -77,7 +77,7 @@ const Navbar = () => {
         <ul className="flex items-center gap-4 text-white font-medium text-sm">
           {links.map((link) => (
             <li key={link.key}>
-              <a href={`#${link.key}`} className="hover:text-accent transition">
+              <a href={`${link.url}`} className="hover:text-accent transition">
                 {link.label}
               </a>
             </li>
