@@ -9,6 +9,9 @@ import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getUser } from "../utils/getUser.js";
+import { isLoggedIn as loggedIn } from "../utils/isLoggedIn.js";
+import api from "../hooks/api.js";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -48,7 +51,14 @@ const Navbar = () => {
   }, []);
 
   const [selectedLang, setSelectedLang] = useState("en");
-
+  const [isLoggedIn, setIsLoggedIn] = useState(loggedIn);
+  const submitLogOut = async () => {
+    const res = await api.get("/user/signout");
+    if (res.status === 200) {
+      localStorage.removeItem("Login");
+      setIsLoggedIn(false);
+    }
+  };
   useEffect(() => {
     const savedLang = localStorage.getItem("lang");
     const langToSet = savedLang || "en";
@@ -85,23 +95,29 @@ const Navbar = () => {
 
           <div className="flex items-center gap-2">
             {/* Auth select (navigate on change) */}
-            <select
-              aria-label={t("authentication:subject")}
-              defaultValue=""
-              className="bg-transparent text-white p-1 rounded outline-none focus:outline-none focus:ring-0 focus:ring-offset-0"
-              onChange={(e) => {
-                if (e.target.value) navigate(e.target.value);
-              }}
-            >
-              <option value="" disabled className="text-black">
-                {t("authentication:subject")}
-              </option>
-              {(authOption || []).map((op) => (
-                <option key={op.id} value={op.link} className="text-black">
-                  {op.label}
+            {!isLoggedIn ? (
+              <select
+                aria-label={t("authentication:subject")}
+                defaultValue=""
+                className="bg-transparent text-white p-1 rounded outline-none focus:outline-none focus:ring-0 focus:ring-offset-0"
+                onChange={(e) => {
+                  if (e.target.value) navigate(e.target.value);
+                }}
+              >
+                <option value="" disabled className="text-black">
+                  {t("authentication:subject")}
                 </option>
-              ))}
-            </select>
+                {(authOption || []).map((op) => (
+                  <option key={op.id} value={op.link} className="text-black">
+                    {op.label}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <button onClick={submitLogOut}>
+                {t("authentication:logout")}
+              </button>
+            )}
 
             {/* Language switcher */}
             <Globe className="text-white w-4 h-4" />

@@ -92,7 +92,7 @@ const LoginForm = () => {
     setErrors({});
 
     try {
-      const res = await api.post("/user/login", {
+      const res = await api.post("/user/signin", {
         email: formData.email.trim(),
         password: formData.password,
       });
@@ -100,6 +100,8 @@ const LoginForm = () => {
       const message = res?.data?.message || t("login:success.default");
       setModalMsg(message);
       setModalOpen(true);
+
+      localStorage.setItem("Login", true);
 
       // যদি টোকেন ফেরত আসে, চাইলে সংরক্ষণ করো
       const token = res?.data?.token;
@@ -121,7 +123,7 @@ const LoginForm = () => {
       );
 
       // ইচ্ছেমতো রিডাইরেক্ট করো
-      // navigate("/dashboard");
+      navigate("/");
       setFormData({ email: "", password: "", remember: false });
     } catch (err) {
       const status = err?.response?.status;

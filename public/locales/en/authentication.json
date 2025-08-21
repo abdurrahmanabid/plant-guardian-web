@@ -1,15 +1,16 @@
 {
-  "subject":"Authentication",
-  "authentication":[
+  "subject": "Authentication",
+  "logout": "লগ-আউট",
+  "authentication": [
     {
-      "id":1,
-      "label":"Login",
-      "link":"/login"
+      "id": 1,
+      "label": "Login",
+      "link": "/login"
     },
     {
-      "id":2,
-      "label":"Registration",
-      "link":"/registration"
+      "id": 2,
+      "label": "Registration",
+      "link": "/registration"
     }
   ]
 }

@@ -7,6 +7,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,                // জরুরি
 });
 
 // Optional: Add interceptors for auth token, error handling, etc.

@@ -136,7 +136,7 @@ const RegistrationForm = () => {
 
     try {
       // Your API base likely set in api instance; matches your other code style
-      const res = await api.post("/user/register", payload);
+      const res = await api.post("/user/signup", payload);
 
       setModalMsg(
         res?.data?.message ||
