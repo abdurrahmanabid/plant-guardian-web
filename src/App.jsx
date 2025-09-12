@@ -17,7 +17,7 @@ import avatarFarmar from "./assets/img/avatar-farmar.png";
 import Avatar from "./components/Avatar";
 import Profile from "./components/Profile";
 import LeafDiseasePage from "./pages/LeafDiseasePage";
-
+import SoilAnalysisResult from "./pages/SoilAnalysisResult";
 const App = () => {
   const AppLayout = () => {
     const navigate = useNavigate();
@@ -47,6 +47,7 @@ const App = () => {
           <Route path="/login" element={<LoginForm />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/leaf-disease-predict" element={<LeafDiseasePage />} />
+          <Route path="/soil-analysis-result" element={<SoilAnalysisResult />} />
         </Route>
       </Routes>
     </Router>

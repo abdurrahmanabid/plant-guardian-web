@@ -1,0 +1,40 @@
+{
+  "title": "Soil Analysis - Results",
+  "subtitle": "Your soil analysis results and recommendations",
+
+  "results": {
+    "title": "Analysis Results",
+    "fertilizerLabel": "Recommended Fertilizer",
+    "treatmentLabel": "Treatment Suggestion",
+    "additionalResults": "Additional Results",
+    "noRecommendation": "No recommendation available",
+    "noTreatment": "No treatment suggestion available"
+  },
+
+  "inputData": {
+    "title": "Input Data Summary",
+    "noData": "No input data available"
+  },
+
+  "error": {
+    "title": "Error",
+    "tryAgain": "Try Again"
+  },
+
+  "buttons": {
+    "newAnalysis": "New Analysis",
+    "printResults": "Explain With AI"
+  },
+
+  "fields": {
+    "temperature": "Temperature",
+    "ph": "pH Level",
+    "rainfall": "Rainfall",
+    "soilColor": "Soil Color",
+    "nitrogen": "Nitrogen",
+    "potassium": "Potassium",
+    "phosphorus": "Phosphorus",
+    "crop": "Crop Type",
+    "disease": "Disease"
+  }
+}

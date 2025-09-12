@@ -1,25 +1,28 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { useSoilAnalysisFields } from "../hooks/useSoilAnalysisFields";
 import { useFormValidation } from "../hooks/useFormValidation";
 import FormSidebar from "./FormSidebar";
 import FieldDetailsPanel from "./FieldDetailsPanel";
 import api from "../hooks/api";
 import LeafSpinner from "./LeafSpinner";
-import Modal from "./Modal";
 
 const AnimatedForm = () => {
+  const { t } = useTranslation("soil-input");
+  const navigate = useNavigate();
   const [selectedField, setSelectedField] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [modal, setModal] = useState(false);
-  const [tretment, setTreatment] = useState(null);
+  const [diseaseOptions, setDiseaseOptions] = useState([]);
 
   const sidebarRef = useRef(null);
   const detailsPanelRef = useRef(null);
   const fieldItemsRef = useRef([]);
   const importanceRef = useRef(null);
+  const prevCropRef = useRef(null);
 
   const soilAnalysisFields = useSoilAnalysisFields();
   const {
@@ -31,6 +34,44 @@ const AnimatedForm = () => {
     handleInputChange,
     validateForm,
   } = useFormValidation(soilAnalysisFields);
+
+  // Update disease options when crop changes
+  useEffect(() => {
+    if (formData.crop) {
+      const cropDiseases = t(`diseases.${formData.crop}`, {
+        returnObjects: true,
+      });
+
+      if (
+        cropDiseases &&
+        typeof cropDiseases === "object" &&
+        !Array.isArray(cropDiseases)
+      ) {
+        const options = Object.entries(cropDiseases).map(([value, label]) => ({
+          value,
+          label,
+        }));
+        setDiseaseOptions(options);
+
+        // Clear disease selection only when crop actually changes
+        if (prevCropRef.current !== formData.crop && formData.disease) {
+          handleInputChange({
+            target: {
+              name: "disease",
+              value: "",
+            },
+          });
+        }
+      } else {
+        setDiseaseOptions([]);
+      }
+    } else {
+      setDiseaseOptions([]);
+    }
+
+    // Update the ref with current crop
+    prevCropRef.current = formData.crop;
+  }, [formData.crop, formData.disease, t]); // Removed handleInputChange from dependencies
 
   useGSAP(() => {
     // Initial entrance animation
@@ -115,7 +156,7 @@ const AnimatedForm = () => {
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (validateForm()) {
       // Success animation
       gsap.to(detailsPanelRef.current, {
@@ -124,38 +165,71 @@ const AnimatedForm = () => {
         ease: "back.out(1.7)",
         yoyo: true,
         repeat: 1,
-        onComplete: () => {
-          console.log("Soil Analysis Data:", formData);
+        onComplete: async () => {
           setIsLoading(true);
-          api
-            .post("/predict", {
-              Temparature: parseInt(formData?.temperature),
-              Humidity: parseInt(formData?.humidity),
-              Moisture: parseInt(formData?.moisture),
-              "Soil Type": formData?.soilType,
-              Nitrogen: parseInt(formData?.nitrogen),
-              Potassium: parseInt(formData?.potassium),
-              Phosphorous: parseInt(formData?.phosphorous),
-              "Fertilizer Name": formData?.fertilizerName,
-              Disease: formData?.disease,
-            })
-            .then((response) => {
-              setIsLoading(false);
-              setModal(true);
-              console.log("Response from server:", response.data);
-              if (response.data?.predicted_treatment) {
-                setTreatment(response?.data?.predicted_treatment);
-              } else {
-                setTreatment("Sorry, You might miss some fields");
+          try {
+            const response = await api.post(
+              "/predict/predict-fertilizer-and-treatment",
+              {
+                Temperature: parseInt(formData?.temperature),
+                pH: parseFloat(formData?.ph),
+                Rainfall: parseInt(formData?.rainfall),
+                Soil_color: formData?.soilColor,
+                Nitrogen: parseInt(formData?.nitrogen),
+                Potassium: parseInt(formData?.potassium),
+                Phosphorus: parseInt(formData?.phosphorus),
+                Crop: formData?.crop,
+                Disease: formData?.disease,
               }
-            })
-            .catch((error) => {
-              setIsLoading(false);
+            );
+
+            setIsLoading(false);
+
+            if (response.data?.data) {
+              const resultData = {
+                formData: formData,
+                result: response.data.data,
+                predicted_fertilizer: response.data.data.predicted_fertilizer,
+                treatment_suggestion: response.data.data.treatment_suggestion,
+                fullResult:
+                  response.data.data.predicted_fertilizer +
+                  " and " +
+                  response.data.data.treatment_suggestion,
+              };
+
+              // Redirect to results page with data
+              navigate("/soil-analysis-result", { state: resultData });
+            } else {
+              // Handle error case
+              navigate("/soil-analysis-result", {
+                state: {
+                  error: "Sorry, You might miss some fields",
+                  formData: formData,
+                },
+              });
+            }
+          } catch (error) {
+            setIsLoading(false);
+            navigate("/soil-analysis-result", {
+              state: {
+                error: "Server error. Please try again.",
+                formData: formData,
+              },
             });
+          }
         },
       });
     }
   };
+
+  // Get crop options from translation
+  const cropOptions = Object.entries(t("crops", { returnObjects: true })).map(
+    ([value, label]) => ({
+      value,
+      label,
+    })
+  );
+
   return (
     <div className="h-screen text-white relative overflow-hidden mt-[10vh]">
       {isLoading && <LeafSpinner />}
@@ -182,17 +256,9 @@ const AnimatedForm = () => {
             onSubmit={handleSubmit}
             detailsPanelRef={detailsPanelRef}
             importanceRef={importanceRef}
+            cropOptions={cropOptions}
+            diseaseOptions={diseaseOptions}
           />
-          {/* Modal for additional information */}
-          {modal && (
-            <Modal isOpen={modal} onClose={() => setModal(false)}>
-              <h2 className="text-2xl font-bold mb-4">Soil Analysis Result:</h2>
-              <h2 className="text-xl font-semibold mb-4">{tretment}</h2>
-              <p className="mb-4">
-                Please follow the recommended treatment for your soil analysis.
-              </p>
-            </Modal>
-          )}
         </div>
       </div>
     </div>

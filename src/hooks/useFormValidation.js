@@ -15,7 +15,6 @@ export const useFormValidation = (soilAnalysisFields) => {
       return value && value.toString().trim() !== '';
     });
     setShowSubmitButton(allFilled);
-    console.log('All fields filled:', allFilled, 'Form data:', formData);
   };
 
   // Check if a specific field is filled
@@ -35,7 +34,7 @@ export const useFormValidation = (soilAnalysisFields) => {
       ...prev,
       [fieldId]: value
     }));
-    
+
     // Clear error when user starts typing
     if (errors[fieldId]) {
       setErrors(prev => ({
@@ -51,14 +50,14 @@ export const useFormValidation = (soilAnalysisFields) => {
   // Validate form
   const validateForm = () => {
     const newErrors = {};
-    
+
     // Validate required fields
     soilAnalysisFields.forEach(field => {
       if (field.required && (!formData[field.id] || formData[field.id].toString().trim() === '')) {
         newErrors[field.id] = `${field.name} ${t('required')}`;
       }
     });
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };

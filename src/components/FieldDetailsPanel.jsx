@@ -10,11 +10,28 @@ const FieldDetailsPanel = ({
   showSubmitButton, 
   onSubmit,
   detailsPanelRef,
-  importanceRef 
+  importanceRef,
+  diseaseOptions
 }) => {
   const { t } = useTranslation("soil-input");
 
   const getFieldPreview = (field) => {
+    // For disease field, use the dynamic disease options
+    if (field.id === 'disease') {
+      return (
+        <CommonFormField
+          field={{
+            ...field,
+            options: diseaseOptions
+          }}
+          value={formData[field.id] || ''}
+          onChange={handleInputChange}
+          error={errors[field.id]}
+          disabled={!formData.crop} // Disable if no crop selected
+        />
+      );
+    }
+    
     return (
       <CommonFormField
         field={field}
@@ -122,4 +139,4 @@ const FieldDetailsPanel = ({
   );
 };
 
-export default FieldDetailsPanel; 
+export default FieldDetailsPanel;
