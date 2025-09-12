@@ -4,6 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTranslation } from "react-i18next";
 import { useRef } from "react";
 import Sector from "./Sector";
+import { useNavigate } from "react-router-dom";
 
 // Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -11,6 +12,7 @@ gsap.registerPlugin(ScrollTrigger);
 const HowTo = () => {
   const { t } = useTranslation("howTo");
   const containerRef = useRef(null);
+  const navigate = useNavigate();
   const titleRef = useRef(null);
   const descRef = useRef(null);
   const modesRef = useRef([]);
@@ -119,6 +121,9 @@ const HowTo = () => {
       footer: t("mode_1_footer"),
       button: t("mode_1_button"),
       icon: "🔍",
+      clickEvent: () => {
+        navigate("/leaf-disease-predict");
+      },
       gradient: "from-blue-500 to-cyan-500",
     },
     {
@@ -128,6 +133,7 @@ const HowTo = () => {
       footer: t("mode_2_footer"),
       button: t("mode_2_button"),
       icon: "🌱",
+      clickEvent: () => {},
       gradient: "from-green-500 to-emerald-500",
     },
     {
@@ -137,6 +143,7 @@ const HowTo = () => {
       footer: t("mode_3_footer"),
       button: t("mode_3_button"),
       icon: "🚀",
+      clickEvent: () => {},
       gradient: "from-purple-500 to-pink-500",
     },
   ];
@@ -216,6 +223,7 @@ const HowTo = () => {
 
               {/* Button */}
               <button
+                onClick={mode.clickEvent}
                 className={`w-full py-3 px-6 bg-gradient-to-r ${mode.gradient} text-white font-semibold rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-sm lg:text-base`}
               >
                 {mode.button}

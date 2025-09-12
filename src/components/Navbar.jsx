@@ -8,7 +8,7 @@ import { language } from "../constants/language.js";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getUser } from "../utils/getUser.js";
 import { isLoggedIn as loggedIn } from "../utils/isLoggedIn.js";
 import api from "../hooks/api.js";
@@ -76,7 +76,7 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-[#0b061f]/40 backdrop-blur-md shadow-md border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
+      <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center relative">
         <a href="#home" className="flex items-center gap-2">
           <img src={logo} alt="logo" height={32} width={32} />
           <p className="text-white font-semibold text-base">
@@ -87,9 +87,9 @@ const Navbar = () => {
         <ul className="flex items-center gap-4 text-white font-medium text-sm">
           {links.map((link) => (
             <li key={link.key}>
-              <a href={`${link.url}`} className="hover:text-accent transition">
+              <Link to={`${link.url}`} className="hover:text-accent transition">
                 {link.label}
-              </a>
+              </Link>
             </li>
           ))}
 
@@ -114,7 +114,10 @@ const Navbar = () => {
                 ))}
               </select>
             ) : (
-              <button onClick={submitLogOut}>
+              <button
+                onClick={submitLogOut}
+                className="hover:text-[#a2ee92] transition"
+              >
                 {t("authentication:logout")}
               </button>
             )}

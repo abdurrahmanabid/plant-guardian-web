@@ -7,12 +7,12 @@ import rightLeaf from "../assets/img/hero-right-leaf.png";
 import { useTranslation } from "react-i18next";
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
+import { getUser } from "../utils/getUser";
 
 const HeroSection = () => {
   const { t } = useTranslation();
   const { t: hero } = useTranslation("home");
   const navigate = useNavigate();
-
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   useGSAP(() => {
