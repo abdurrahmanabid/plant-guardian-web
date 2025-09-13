@@ -8,7 +8,14 @@
     "treatmentLabel": "চিকিৎসা সুপারিশ",
     "additionalResults": "অতিরিক্ত ফলাফল",
     "noRecommendation": "কোনো সুপারিশ উপলব্ধ নেই",
-    "noTreatment": "কোনো চিকিৎসা সুপারিশ উপলব্ধ নেই"
+    "noTreatment": "কোনো চিকিৎসা সুপারিশ উপলব্ধ নেই",
+    "explanationLabel": "এআই ব্যাখ্যা",
+    "explainedFields": {
+      "whyFertilizer": "এই সার কেন",
+      "whyTreatment": "এই চিকিৎসা কেন",
+      "benefit": "সুবিধা",
+      "tips": "টিপস"
+    }
   },
 
   "inputData": {
@@ -23,7 +30,13 @@
 
   "buttons": {
     "newAnalysis": "নতুন বিশ্লেষণ",
-    "printResults": "এআই দিয়ে বিশ্লেষণ করুন"
+    "getDetails": "এআই দিয়ে বিশ্লেষণ করুন",
+    "gptDetails": "এআই ব্যাখ্যা পান",
+    "generating": "তৈরি হচ্ছে..."
+  },
+  "gptError": {
+    "failed": "ব্যাখ্যা পেতে সমস্যা হয়েছে। আবার চেষ্টা করুন।",
+    "noExplanation": "কোনো ব্যাখ্যা পাওয়া যায়নি।"
   },
 
   "fields": {

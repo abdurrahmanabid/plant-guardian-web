@@ -8,7 +8,14 @@
     "treatmentLabel": "Treatment Suggestion",
     "additionalResults": "Additional Results",
     "noRecommendation": "No recommendation available",
-    "noTreatment": "No treatment suggestion available"
+    "noTreatment": "No treatment suggestion available",
+    "explanationLabel": "AI Explanation",
+    "explainedFields": {
+      "whyFertilizer": "Why This Fertilizer",
+      "whyTreatment": "Why This Treatmen",
+      "benefit": "Benefit",
+      "tips": "Tips"
+    }
   },
 
   "inputData": {
@@ -23,7 +30,12 @@
 
   "buttons": {
     "newAnalysis": "New Analysis",
-    "printResults": "Explain With AI"
+    "gptDetails": "Get AI Explanation",
+    "generating": "Generating..."
+  },
+  "gptError": {
+    "failed": "Failed to get explanation. Please try again.",
+    "noExplanation": "No explanation was returned."
   },
 
   "fields": {

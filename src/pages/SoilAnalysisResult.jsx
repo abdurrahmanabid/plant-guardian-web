@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useGSAP } from "@gsap/react";
@@ -7,6 +7,7 @@ import { SplitText } from "gsap/all";
 import leftLeaf from "../assets/img/hero-left-leaf.png";
 import rightLeaf from "../assets/img/hero-right-leaf.png";
 import Button from "../components/Button";
+import api from "../hooks/api";
 
 // ---------- One-time GSAP plugin registration ----------
 if (!gsap.core.globals()._soilResultPluginsRegistered) {
@@ -26,11 +27,36 @@ const SoilAnalysisResult = () => {
     treatment_suggestion,
   } = location.state || {};
 
+  // State for GPT explanation
+  const [gptExplanation, setGptExplanation] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [gptError, setGptError] = useState("");
+
   const titleRef = useRef(null);
   const resultRef = useRef(null);
   const formDataRef = useRef(null);
+  const explanationRef = useRef(null);
 
-  // ---------- Animations ----------
+  // Animation for GPT explanation when it appears
+  useGSAP(() => {
+    if (explanationRef.current && gptExplanation) {
+      gsap.fromTo(
+        explanationRef.current,
+        {
+          opacity: 0,
+          y: 20,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "power2.out",
+        }
+      );
+    }
+  }, [gptExplanation]);
+
+  // ---------- Other animations remain the same ----------
   useGSAP(() => {
     // Title animation
     if (titleRef.current) {
@@ -107,6 +133,71 @@ const SoilAnalysisResult = () => {
   // Function to get translated field names
   const getTranslatedFieldName = (fieldKey) => {
     return t(`fields.${fieldKey}`, { defaultValue: fieldKey });
+  };
+
+  // Function to handle GPT explanation request
+  const handleGptExplanation = async () => {
+    setIsLoading(true);
+    setGptError("");
+
+    try {
+      // Prepare the data to send to GPT
+      const requestData = {
+        content: `Analyze the soil test results.   
+        Soil Info: 
+        - N: ${formData.nitrogen || "N/A"}
+        - P: ${formData.phosphorus || "N/A"}
+        - K: ${formData.potassium || "N/A"}
+        - Temp: ${formData.temperature || "N/A"}°C
+        - Humidity: ${formData.humidity || "N/A"}%
+        - pH: ${formData.ph || "N/A"}
+        - Rainfall: ${formData.rainfall || "N/A"}mm
+        - Disease With Crop: ${formData.disease || "N/A"}
+        Fertilizer: ${predicted_fertilizer || "N/A"}
+        Treatment: ${treatment_suggestion || "N/A"}
+        Explain in short:
+        1. Why this Treatment?
+        2. Why this fertilizer?
+        3. Benefits for the crop?
+        4. Tips to improve soil health.`,
+
+        systemMessage: `You’re an agriculture expert. Explain the soil results and suggestions simply for farmers. Avoid jargon and provide practical, actionable advice in a conversational tone.
+        in json
+        {whyFertilizer:Why this fertilizer?,
+        benefit:Benefits for the crop?,
+        tips: Tips to improve soil health.,
+        whyTreatment: Why this Treatment?
+        } provide in ${
+          localStorage.getItem("lang") === "en" ? "english" : "bangla"
+        }`,
+      };
+
+      const response = await api.post("gpt/gpt-explain", requestData);
+
+      if (response.data && response.data.response) {
+        // Parse the response string
+        const parsedResponse = JSON.parse(response.data.response);
+
+        const { whyFertilizer, benefit, tips, whyTreatment } = parsedResponse;
+
+        setGptExplanation(
+          `${t(
+            "results.explainedFields.whyFertilizer"
+          )}: \n${whyFertilizer}\n\n${t(
+            "results.explainedFields.whyTreatment"
+          )}: \n${whyTreatment}\n\n${t(
+            "results.explainedFields.benefit"
+          )}:\n${benefit}\n\n${t("results.explainedFields.tips")}:\n${tips}`
+        );
+      } else {
+        setGptError(t("gptError.noExplanation"));
+      }
+    } catch (err) {
+      console.error("Error getting GPT explanation:", err);
+      setGptError(t("gptError.failed"));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (error) {
@@ -212,15 +303,46 @@ const SoilAnalysisResult = () => {
                   {treatment_suggestion || t("results.noTreatment")}
                 </p>
               </div>
+
+              {/* GPT Explanation Section */}
+              {gptExplanation && (
+                <div
+                  ref={explanationRef}
+                  className="p-6 bg-purple-900/20 border border-purple-400/20 rounded-xl"
+                >
+                  <p className="text-xs uppercase tracking-[0.2em] opacity-70 mb-2">
+                    {t("results.explanationLabel")}
+                  </p>
+                  <p className="text-lg opacity-90 whitespace-pre-wrap">
+                    {gptExplanation}
+                  </p>
+                </div>
+              )}
+
+              {/* Error message for GPT */}
+              {gptError && (
+                <div className="p-4 bg-red-900/20 border border-red-400/20 rounded-xl">
+                  <p className="text-red-300">{gptError}</p>
+                </div>
+              )}
+
               <div className="flex flex-col gap-3 mt-8 pt-6 border-t border-white/10">
                 <Button
                   thickness={2}
                   speed="5s"
-                  onClick={() => {}}
+                  onClick={handleGptExplanation}
                   variant="outline"
                   className="w-full"
+                  disabled={isLoading}
                 >
-                  {t("buttons.printResults")}
+                  {isLoading ? (
+                    <span className="flex items-center justify-center">
+                      <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>
+                      {t("buttons.generating")}
+                    </span>
+                  ) : (
+                    t("buttons.gptDetails")
+                  )}
                 </Button>
               </div>
             </div>
