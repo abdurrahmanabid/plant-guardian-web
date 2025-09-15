@@ -18,6 +18,8 @@ import Avatar from "./components/Avatar";
 import Profile from "./components/Profile";
 import LeafDiseasePage from "./pages/LeafDiseasePage";
 import SoilAnalysisResult from "./pages/SoilAnalysisResult";
+import AboutUs from "./pages/AboutUs";
+import Contact from "./pages/Contact";
 const App = () => {
   const AppLayout = () => {
     const navigate = useNavigate();
@@ -46,6 +48,8 @@ const App = () => {
           <Route path="/registration" element={<RegistrationForm />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/contact" element={<Contact />} />
           <Route
             path="/leaf-disease-predict/:type"
             element={<LeafDiseasePage />}

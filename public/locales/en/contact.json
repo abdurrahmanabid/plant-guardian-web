@@ -1,0 +1,41 @@
+{
+  "title": "Contact",
+  "subtitle": "Questions, ideas, or issues? Reach out—I'd love to hear from you.",
+  "cards": {
+    "email": { "title": "Email", "body": "Best way to get a quick response." },
+    "location": {
+      "title": "Location",
+      "note": "Available for remote collaboration"
+    },
+    "links": { "title": "Links" }
+  },
+  "labels": {
+    "name": "Your name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message"
+  },
+  "placeholders": {
+    "name": "e.g., Afsana Rahman",
+    "email": "you@example.com",
+    "message": "Tell me a bit about your request…"
+  },
+  "subjects": {
+    "general": "General",
+    "bug": "Bug report",
+    "partnership": "Partnership"
+  },
+  "cta": {
+    "send": "Send message",
+    "sending": "Sending…",
+    "sent": "Message sent!",
+    "backHome": "Back to home"
+  },
+  "errors": {
+    "name": "Please enter your name.",
+    "email": "Please enter a valid email.",
+    "message": "Please write at least 10 characters.",
+    "bot": "Bot detected.",
+    "server": "Something went wrong. Please try again."
+  }
+}

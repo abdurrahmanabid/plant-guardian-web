@@ -1,0 +1,65 @@
+{
+  "title": "About PlantGuardian",
+  "subtitle": "We help farmers and gardeners diagnose leaf diseases in seconds and get clear, local-language advice on treatment and fertilizer.",
+  "stats": {
+    "classes": { "value": "44", "label": "Disease classes" },
+    "languages": { "value": "2", "label": "Languages (EN/BN)" },
+    "response": { "value": "<2s", "label": "Typical response" },
+    "accuracy": { "value": "ML+Rules", "label": "Practical accuracy" }
+  },
+  "mission": {
+    "title": "Our Mission",
+    "body": "Make plant care simple. PlantGuardian combines a CNN classifier with a rule-based expert layer to turn a leaf photo into actionable treatment and fertilizer guidance."
+  },
+  "how": {
+    "title": "How it works",
+    "steps": [
+      "Open the scanner and upload or snap a leaf photo.",
+      "We detect the crop & disease from 44 supported classes.",
+      "You get care steps, medicine suggestions, and alternatives.",
+      "Optionally view fertilizer recommendations for your soil."
+    ]
+  },
+  "features": {
+    "fast": {
+      "title": "Fast by design",
+      "body": "GPU-friendly CNN + small payloads keep results snappy."
+    },
+    "actionable": {
+      "title": "Actionable tips",
+      "body": "Clear care steps, specific treatments, and safer alternatives."
+    },
+    "local": {
+      "title": "Local context",
+      "body": "Advice aligned with regional conditions where possible."
+    },
+    "multilang": {
+      "title": "English & Bangla",
+      "body": "Full i18n via i18next; easy to add more locales later."
+    },
+    "privacy": {
+      "title": "Your data, your device",
+      "body": "We only use your image for the prediction flow—nothing more."
+    },
+    "stack": {
+      "title": "Built with MERN",
+      "body": "React, Node/Express, MongoDB, Tailwind, i18next, and GSAP."
+    }
+  },
+  "team": {
+    "title": "Team",
+    "roles": { "founder": "Founder & Developer" },
+    "location": "Location",
+    "contact": "Contact"
+  },
+  "credits": {
+    "title": "Credits",
+    "items": {
+      "dataset": "Open datasets and your curated 44-class crop library",
+      "icons": "Leaf graphics and open-source icons",
+      "libs": "React, Tailwind, GSAP, i18next, and more"
+    }
+  },
+  "cta": { "scanLeaf": "Scan a leaf", "tryNow": "Try PlantGuardian" },
+  "footer": { "note": "Made for growers, students, and curious makers." }
+}
