@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSoilAnalysisFields } from "../hooks/useSoilAnalysisFields";
 import { useFormValidation } from "../hooks/useFormValidation";
 import FormSidebar from "./FormSidebar";
@@ -13,18 +13,25 @@ import LeafSpinner from "./LeafSpinner";
 const AnimatedForm = () => {
   const { t } = useTranslation("soil-input");
   const navigate = useNavigate();
+  const location = useLocation();
+  const { disease, confidence, image, treatment_suggestion } =
+    location?.state ?? {};
   const [selectedField, setSelectedField] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [diseaseOptions, setDiseaseOptions] = useState([]);
-
   const sidebarRef = useRef(null);
   const detailsPanelRef = useRef(null);
   const fieldItemsRef = useRef([]);
   const importanceRef = useRef(null);
-  const prevCropRef = useRef(null);
 
-  const soilAnalysisFields = useSoilAnalysisFields();
+  // Get all fields, then drop the "disease" field entirely
+  const allFields = useSoilAnalysisFields();
+  const soilAnalysisFields = useMemo(() => {
+    if (!Array.isArray(allFields)) return [];
+    // if disease exists -> filter out "crop", else return all
+    return disease ? allFields.filter((f) => f.id !== "crop") : allFields;
+  }, [allFields, disease]);
+
   const {
     formData,
     errors,
@@ -34,44 +41,6 @@ const AnimatedForm = () => {
     handleInputChange,
     validateForm,
   } = useFormValidation(soilAnalysisFields);
-
-  // Update disease options when crop changes
-  useEffect(() => {
-    if (formData.crop) {
-      const cropDiseases = t(`diseases.${formData.crop}`, {
-        returnObjects: true,
-      });
-
-      if (
-        cropDiseases &&
-        typeof cropDiseases === "object" &&
-        !Array.isArray(cropDiseases)
-      ) {
-        const options = Object.entries(cropDiseases).map(([value, label]) => ({
-          value,
-          label,
-        }));
-        setDiseaseOptions(options);
-
-        // Clear disease selection only when crop actually changes
-        if (prevCropRef.current !== formData.crop && formData.disease) {
-          handleInputChange({
-            target: {
-              name: "disease",
-              value: "",
-            },
-          });
-        }
-      } else {
-        setDiseaseOptions([]);
-      }
-    } else {
-      setDiseaseOptions([]);
-    }
-
-    // Update the ref with current crop
-    prevCropRef.current = formData.crop;
-  }, [formData.crop, formData.disease, t]); // Removed handleInputChange from dependencies
 
   useGSAP(() => {
     // Initial entrance animation
@@ -115,14 +84,17 @@ const AnimatedForm = () => {
       }
     );
   }, []);
+  const deriveCropFromLabel = (label) => {
+    if (!label || typeof label !== "string") return null;
+    if (label.includes("___")) return label.split("___")[0]?.trim() || null; // e.g., Rice___bacterial_leaf_blight
+    return label.split("_")[0]?.trim() || null; // fallback: Rice_blight
+  };
 
   const handleFieldSelect = (field) => {
     if (isAnimating) return;
     setIsAnimating(true);
-
     setSelectedField(field);
 
-    // Animate the selection
     const tl = gsap.timeline({
       onComplete: () => setIsAnimating(false),
     });
@@ -157,78 +129,71 @@ const AnimatedForm = () => {
   };
 
   const handleSubmit = async () => {
-    if (validateForm()) {
-      // Success animation
-      gsap.to(detailsPanelRef.current, {
-        scale: 1.05,
-        duration: 0.2,
-        ease: "back.out(1.7)",
-        yoyo: true,
-        repeat: 1,
-        onComplete: async () => {
-          setIsLoading(true);
-          try {
-            const response = await api.post(
-              "/predict/predict-fertilizer-and-treatment",
-              {
-                Temperature: parseInt(formData?.temperature),
-                pH: parseFloat(formData?.ph),
-                Rainfall: parseInt(formData?.rainfall),
-                Soil_color: formData?.soilColor,
-                Nitrogen: parseInt(formData?.nitrogen),
-                Potassium: parseInt(formData?.potassium),
-                Phosphorus: parseInt(formData?.phosphorus),
-                Crop: formData?.crop,
-                Disease: formData?.disease,
-              }
-            );
+    if (!validateForm()) return;
 
-            setIsLoading(false);
+    // Success animation
+    gsap.to(detailsPanelRef.current, {
+      scale: 1.05,
+      duration: 0.2,
+      ease: "back.out(1.7)",
+      yoyo: true,
+      repeat: 1,
+      onComplete: async () => {
+        setIsLoading(true);
+        try {
+          const response = await api.post("/predict/predict-fertilizer", {
+            Temperature: parseInt(formData?.temperature),
+            pH: parseFloat(formData?.ph),
+            Rainfall: parseInt(formData?.rainfall),
+            Soil_color: formData?.soilColor,
+            Nitrogen: parseInt(formData?.nitrogen),
+            Potassium: parseInt(formData?.potassium),
+            Phosphorus: parseInt(formData?.phosphorus),
+            Crop: formData?.crop || deriveCropFromLabel(disease),
+            // Disease removed
+          });
 
-            if (response.data?.data) {
-              const resultData = {
-                formData: formData,
-                result: response.data.data,
-                predicted_fertilizer: response.data.data.predicted_fertilizer,
-                treatment_suggestion: response.data.data.treatment_suggestion,
-                fullResult:
-                  response.data.data.predicted_fertilizer +
-                  " and " +
-                  response.data.data.treatment_suggestion,
-              };
+          setIsLoading(false);
 
-              // Redirect to results page with data
-              navigate("/soil-analysis-result", { state: resultData });
-            } else {
-              // Handle error case
-              navigate("/soil-analysis-result", {
-                state: {
-                  error: "Sorry, You might miss some fields",
-                  formData: formData,
-                },
-              });
-            }
-          } catch (error) {
-            setIsLoading(false);
+          if (response.data?.data) {
+            const resultData = {
+              formData: { ...formData, crop: deriveCropFromLabel(disease) },
+              result: response.data.data,
+              predicted_fertilizer: response.data.data.fertilizer,
+              treatment_suggestion: treatment_suggestion || null,
+              disease,
+              confidence,
+            };
+
+            // Redirect to results page with data
+            navigate("/soil-analysis-result", { state: resultData });
+          } else {
+            // Handle error case
             navigate("/soil-analysis-result", {
               state: {
-                error: "Server error. Please try again.",
-                formData: formData,
+                error: "Sorry, You might miss some fields",
+                formData,
               },
             });
           }
-        },
-      });
-    }
+        } catch (error) {
+          setIsLoading(false);
+          navigate("/soil-analysis-result", {
+            state: {
+              error: "Server error. Please try again.",
+              formData,
+            },
+          });
+        }
+      },
+    });
   };
 
-  // Get crop options from translation
-  const cropOptions = Object.entries(t("crops", { returnObjects: true })).map(
-    ([value, label]) => ({
-      value,
-      label,
-    })
-  );
+  // Get crop options from translation (no disease)
+  const cropOptions = useMemo(() => {
+    const obj = t("crops", { returnObjects: true }) || {};
+    return Object.entries(obj).map(([value, label]) => ({ value, label }));
+  }, [t]);
 
   return (
     <div className="h-screen text-white relative overflow-hidden mt-[10vh]">
@@ -257,7 +222,7 @@ const AnimatedForm = () => {
             detailsPanelRef={detailsPanelRef}
             importanceRef={importanceRef}
             cropOptions={cropOptions}
-            diseaseOptions={diseaseOptions}
+            // No diseaseOptions
           />
         </div>
       </div>

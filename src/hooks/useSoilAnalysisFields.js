@@ -91,17 +91,6 @@ export const useSoilAnalysisFields = () => {
         label
       })),
       required: true
-    },
-    {
-      id: 'disease',
-      name: t('disease'),
-      icon: '🦠',
-      type: 'select',
-      description: t('diseaseDesc'),
-      importance: t('diseaseImportance'),
-      placeholder: t('selectDisease'),
-      options: [], // This will be populated dynamically based on selected crop
-      required: true
     }
   ];
 

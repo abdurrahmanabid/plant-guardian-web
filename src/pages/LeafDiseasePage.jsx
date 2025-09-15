@@ -14,6 +14,7 @@ import Button from "../components/Button";
 import { useTranslation } from "react-i18next";
 import LeafSpinner from "../components/LeafSpinner";
 import api from "../hooks/api";
+import { useNavigate, useParams } from "react-router-dom";
 
 // ---------- One-time GSAP plugin registration ----------
 if (!gsap.core.globals()._leafPagePluginsRegistered) {
@@ -22,8 +23,8 @@ if (!gsap.core.globals()._leafPagePluginsRegistered) {
 }
 
 // ---------- Config ----------
-const API_ENDPOINT = "/predict/leaf-upload"; // <-- your backend route
-const FIELD_NAME = "file"; // <-- change if server expects 'image' or another key
+const API_ENDPOINT = "/predict/leaf-upload"; // your backend upload route
+const FIELD_NAME = "file"; // change if server expects 'image' or another key
 const MAX_MB = 8;
 const ACCEPTED = ["image/jpeg", "image/png", "image/webp"];
 const USE_MOCK = false; // toggle for local testing without backend
@@ -31,54 +32,50 @@ const USE_MOCK = false; // toggle for local testing without backend
 // ---------- Mock (optional) ----------
 async function mockPredict(file) {
   await new Promise((r) => setTimeout(r, 900));
-  const labels = [
-    { label: "Potato___late_blight", confidence: 0.92 },
-    { label: "Potato___early_blight", confidence: 0.06 },
-    { label: "Potato___healthy", confidence: 0.02 },
-  ];
   return {
-    top: labels[0],
-    topK: labels,
-    suggestions: [
-      "Remove heavily infected leaves",
-      "Apply recommended fungicide (mancozeb/chlorothalonil)",
-      "Improve airflow and avoid overhead irrigation",
-    ],
+    top: { label: "Potato___late_blight", confidence: 0.92 },
+    treatment: {
+      care: "Remove heavily infected leaves. Improve airflow and avoid overhead irrigation.",
+      medicine: "Apply recommended fungicide (mancozeb/chlorothalonil).",
+      raw: "Care: Remove heavily infected leaves. Improve airflow and avoid overhead irrigation. | Medicine: Apply recommended fungicide (mancozeb/chlorothalonil).",
+    },
   };
 }
 
 // ---------- Map backend → UI shape ----------
+// Accepts either {data:{...}} or flat {...}.
+// Parses treatment string like: "Care: ... | Medicine: ..."
 function mapApiToUI(apiPayload) {
-  if (!apiPayload || !apiPayload.data) return null;
-  const { prediction, confidence, alternatives } = apiPayload.data;
+  const d = apiPayload?.data ?? apiPayload ?? {};
 
-  const topK = Array.isArray(alternatives)
-    ? alternatives.map((a) => ({
-        label: a.class,
-        confidence: typeof a.prob === "number" ? a.prob : 0,
-      }))
-    : [];
+  const prediction = d.prediction ?? d.label ?? d.top?.label ?? "-";
+  const confidence =
+    typeof d.confidence === "number"
+      ? d.confidence
+      : typeof d.top?.confidence === "number"
+      ? d.top.confidence
+      : undefined;
 
-  const suggestionsByLabel = {
-    Corn___northern_leaf_blight: [
-      "Remove and destroy infected debris after harvest",
-      "Rotate crops; avoid planting corn in same field consecutively",
-      "Use resistant hybrids; consider fungicide at early symptoms",
-    ],
-    Potato___late_blight: [
-      "Remove heavily infected leaves",
-      "Use copper/mancozeb as directed by local guidelines",
-      "Avoid overhead irrigation; ensure airflow",
-    ],
-  };
+  const treatmentRaw = d.treatment ?? null;
+  let care = null;
+  let medicine = null;
+
+  if (typeof treatmentRaw === "string") {
+    treatmentRaw
+      .split("|")
+      .map((s) => s.trim())
+      .forEach((part) => {
+        if (/^care\s*:/i.test(part)) {
+          care = part.replace(/^care\s*:/i, "").trim();
+        } else if (/^medicine\s*:/i.test(part)) {
+          medicine = part.replace(/^medicine\s*:/i, "").trim();
+        }
+      });
+  }
 
   return {
-    top: {
-      label: prediction || "-",
-      confidence: typeof confidence === "number" ? confidence : undefined,
-    },
-    topK,
-    suggestions: suggestionsByLabel[prediction] || [],
+    top: { label: prediction, confidence },
+    treatment: { care, medicine, raw: treatmentRaw },
   };
 }
 
@@ -91,7 +88,14 @@ export default function LeafDiseasePage() {
   const [uploadPct, setUploadPct] = useState(0);
   const [result, setResult] = useState(null);
   const inputRef = useRef(null);
+  const { type } = useParams();
+  const [image, setImage] = useState();
+  const navigate = useNavigate();
 
+  const classOfDiv =
+    type !== "all"
+      ? "mt-10 grid lg:grid-cols-[1.1fr_0.9fr] gap-8"
+      : "mt-10 grid gap-8";
   // ---------- Animations ----------
   useGSAP(() => {
     const titleEl = document.querySelector(".leaf-title");
@@ -183,8 +187,7 @@ export default function LeafDiseasePage() {
       let uiResult;
 
       if (USE_MOCK) {
-        const mock = await mockPredict(file);
-        uiResult = mock;
+        uiResult = await mockPredict(file);
       } else {
         // 1) Upload image
         const form = new FormData();
@@ -200,7 +203,7 @@ export default function LeafDiseasePage() {
           },
         });
 
-        // 🔧 Adjust this line to match your real upload payload structure:
+        // Adjust this path extraction to match your server's upload response
         const imagePath =
           uploadRes?.data?.files?.path ||
           uploadRes?.data?.data?.path ||
@@ -208,10 +211,11 @@ export default function LeafDiseasePage() {
 
         if (!imagePath) {
           throw new Error(
-            "Upload succeeded but image path missing in response."
+            "Upload succeeded but image path is missing in response."
           );
         }
-
+        setImage(imagePath);
+        console.log("image=>", imagePath);
         // 2) Predict using uploaded path
         const predictRes = await api.post("/predict/image-predict", {
           imagePath,
@@ -225,6 +229,17 @@ export default function LeafDiseasePage() {
       }
 
       setResult(uiResult);
+      {
+        type === "all" &&
+          navigate("/soil-analysis", {
+            state: {
+              disease: uiResult.top.label,
+              confidence: uiResult.top.confidence,
+              image: image,
+              treatment_suggestion: uiResult.treatment,
+            },
+          });
+      }
     } catch (e) {
       setError(
         e?.response?.data?.message ||
@@ -238,7 +253,8 @@ export default function LeafDiseasePage() {
     }
   };
 
-  const topK = useMemo(() => result?.topK || [], [result]);
+  // Keep memo if you need derived values later
+  const predicted = useMemo(() => result?.top || null, [result]);
 
   return (
     <section
@@ -266,7 +282,7 @@ export default function LeafDiseasePage() {
             "Upload a leaf photo to detect disease and get care suggestions."}
         </p>
 
-        <div className="mt-10 grid lg:grid-cols-[1.1fr_0.9fr] gap-8">
+        <div className={classOfDiv}>
           {/* Uploader */}
           <div
             onDrop={onDrop}
@@ -357,88 +373,73 @@ export default function LeafDiseasePage() {
           </div>
 
           {/* Results */}
-          <aside className="rounded-2xl md:rounded-3xl p-6 md:p-8 border border-white/10 bg-white/5 dark:bg-black/20">
-            <h3 className="text-base md:text-lg font-semibold mb-4">
-              {t("results") || "Results"}
-            </h3>
-            {!result ? (
-              <p className="opacity-70">
-                {t("noResult") || "No prediction yet."}
-              </p>
-            ) : (
-              <div className="space-y-6">
-                {/* Top Label */}
-                <div>
-                  <p className="text-xs uppercase tracking-[0.2em] opacity-70">
-                    {t("predicted") || "Predicted label"}
-                  </p>
-                  <p className="text-xl font-semibold mt-1">
-                    {result.top?.label || "-"}
-                  </p>
-                  {typeof result.top?.confidence === "number" && (
-                    <p className="opacity-80 text-sm">
-                      {t("confidence", {
-                        pct: Math.round(result.top.confidence * 100),
-                      }) ||
-                        `Confidence: ${Math.round(
-                          result.top.confidence * 100
-                        )}%`}
+          {type !== "all" && (
+            <aside className="rounded-2xl md:rounded-3xl p-6 md:p-8 border border-white/10 bg-white/5 dark:bg-black/20">
+              <h3 className="text-base md:text-lg font-semibold mb-4">
+                {t("results") || "Results"}
+              </h3>
+
+              {!result ? (
+                <p className="opacity-70">
+                  {t("noResult") || "No prediction yet."}
+                </p>
+              ) : (
+                <div className="space-y-6">
+                  {/* Predicted label */}
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.2em] opacity-70">
+                      {t("predicted") || "Predicted label"}
                     </p>
+                    <p className="text-xl font-semibold mt-1">
+                      {predicted?.label || "-"}
+                    </p>
+                    {typeof predicted?.confidence === "number" && (
+                      <p className="opacity-80 text-sm">
+                        {t("confidence", {
+                          pct: Math.round(predicted.confidence * 100),
+                        }) ||
+                          `Confidence: ${Math.round(
+                            predicted.confidence * 100
+                          )}%`}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Treatment (Care + Medicine) */}
+                  {((result.treatment?.care ?? null) !== null ||
+                    (result.treatment?.medicine ?? null) !== null) && (
+                    <div className="space-y-3">
+                      <p className="text-xs uppercase tracking-[0.2em] opacity-70">
+                        {t("treatment") || "Treatment"}
+                      </p>
+
+                      {result.treatment.care && (
+                        <div className="rounded-lg border border-white/10 bg-white/5 dark:bg-black/30 p-3">
+                          <p className="text-sm font-semibold mb-1">
+                            {t("care") || "Care"}
+                          </p>
+                          <p className="opacity-90 text-sm leading-relaxed">
+                            {result.treatment.care}
+                          </p>
+                        </div>
+                      )}
+
+                      {result.treatment.medicine && (
+                        <div className="rounded-lg border border-white/10 bg-white/5 dark:bg-black/30 p-3">
+                          <p className="text-sm font-semibold mb-1">
+                            {t("medicine") || "Medicine"}
+                          </p>
+                          <p className="opacity-90 text-sm leading-relaxed">
+                            {result.treatment.medicine}
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
-
-                {/* Top-K bar list */}
-                {Array.isArray(result.topK) && result.topK.length > 0 && (
-                  <div className="space-y-2">
-                    <p className="text-xs uppercase tracking-[0.2em] opacity-70">
-                      {t("alternatives") || "Alternatives"}
-                    </p>
-                    <div className="space-y-2">
-                      {result.topK.map((item, idx) => (
-                        <div key={idx} className="w-full">
-                          <div className="flex justify-between text-sm mb-1">
-                            <span
-                              className="truncate max-w-[70%]"
-                              title={item.label}
-                            >
-                              {item.label}
-                            </span>
-                            <span>{Math.round(item.confidence * 100)}%</span>
-                          </div>
-                          <div className="h-2 bg-white/10 rounded">
-                            <div
-                              className="h-full bg-white/70 dark:bg-white/80 rounded"
-                              style={{
-                                width: `${Math.max(
-                                  2,
-                                  Math.round(item.confidence * 100)
-                                )}%`,
-                              }}
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Suggestions */}
-                {Array.isArray(result.suggestions) &&
-                  result.suggestions.length > 0 && (
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.2em] opacity-70 mb-2">
-                        {t("care") || "Care suggestions"}
-                      </p>
-                      <ul className="list-disc pl-5 space-y-1 opacity-90">
-                        {result.suggestions.map((s, i) => (
-                          <li key={i}>{s}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-              </div>
-            )}
-          </aside>
+              )}
+            </aside>
+          )}
         </div>
       </div>
     </section>

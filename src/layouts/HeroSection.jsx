@@ -98,7 +98,7 @@ const HeroSection = () => {
               <Button
                 speed="5s"
                 thickness={3}
-                onClick={() => navigate("/soil-analysis")}
+                onClick={() => navigate("/leaf-disease-predict/all")}
               >
                 {hero("right-button")}
               </Button>

@@ -8,6 +8,7 @@ import leftLeaf from "../assets/img/hero-left-leaf.png";
 import rightLeaf from "../assets/img/hero-right-leaf.png";
 import Button from "../components/Button";
 import api from "../hooks/api";
+import { prettyLabel } from "../utils/prellyLebel";
 
 // ---------- One-time GSAP plugin registration ----------
 if (!gsap.core.globals()._soilResultPluginsRegistered) {
@@ -25,8 +26,9 @@ const SoilAnalysisResult = () => {
     error,
     predicted_fertilizer,
     treatment_suggestion,
+    disease,
+    confidence,
   } = location.state || {};
-
   // State for GPT explanation
   const [gptExplanation, setGptExplanation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -154,7 +156,7 @@ const SoilAnalysisResult = () => {
         - Rainfall: ${formData.rainfall || "N/A"}mm
         - Disease With Crop: ${formData.disease || "N/A"}
         Fertilizer: ${predicted_fertilizer || "N/A"}
-        Treatment: ${treatment_suggestion || "N/A"}
+        Treatment: ${treatment_suggestion?.raw || "N/A"}
         Explain in short:
         1. Why this Treatment?
         2. Why this fertilizer?
@@ -166,7 +168,7 @@ const SoilAnalysisResult = () => {
         {whyFertilizer:Why this fertilizer?,
         benefit:Benefits for the crop?,
         tips: Tips to improve soil health.,
-        whyTreatment: Why this Treatment?
+        ${treatment_suggestion && "whyTreatment: Why this Treatment?"}
         } provide in ${
           localStorage.getItem("lang") === "en" ? "english" : "bangla"
         }`,
@@ -183,11 +185,15 @@ const SoilAnalysisResult = () => {
         setGptExplanation(
           `${t(
             "results.explainedFields.whyFertilizer"
-          )}: \n${whyFertilizer}\n\n${t(
-            "results.explainedFields.whyTreatment"
-          )}: \n${whyTreatment}\n\n${t(
-            "results.explainedFields.benefit"
-          )}:\n${benefit}\n\n${t("results.explainedFields.tips")}:\n${tips}`
+          )}: \n${whyFertilizer}\n\n${
+            treatment_suggestion
+              ? `${t(
+                  "results.explainedFields.whyTreatment"
+                )}: \n${whyTreatment}\n\n`
+              : ""
+          }${t("results.explainedFields.benefit")}:\n${benefit}\n\n${t(
+            "results.explainedFields.tips"
+          )}:\n${tips}`
         );
       } else {
         setGptError(t("gptError.noExplanation"));
@@ -288,6 +294,18 @@ const SoilAnalysisResult = () => {
             <div ref={resultRef} className="space-y-6">
               <div className="p-6 bg-green-900/20 border border-green-400/20 rounded-xl">
                 <p className="text-xs uppercase tracking-[0.2em] opacity-70 mb-2">
+                  {t("results.disease")}
+                </p>
+                <p className="text-2xl font-semibold text-green-300">
+                  {prettyLabel(disease) || t("results.noRecommendation")}
+                </p>
+                <p className="font-semibold text-green-300">
+                  {t("results.confidenceLabel")}:{" "}
+                  {Math.round(confidence * 100) + "%" || null}
+                </p>
+              </div>
+              <div className="p-6 bg-green-900/20 border border-green-400/20 rounded-xl">
+                <p className="text-xs uppercase tracking-[0.2em] opacity-70 mb-2">
                   {t("results.fertilizerLabel")}
                 </p>
                 <p className="text-2xl font-semibold text-green-300">
@@ -295,14 +313,27 @@ const SoilAnalysisResult = () => {
                 </p>
               </div>
 
-              <div className="p-6 bg-blue-900/20 border border-blue-400/20 rounded-xl">
-                <p className="text-xs uppercase tracking-[0.2em] opacity-70 mb-2">
-                  {t("results.treatmentLabel")}
-                </p>
-                <p className="text-xl opacity-90">
-                  {treatment_suggestion || t("results.noTreatment")}
-                </p>
-              </div>
+              {treatment_suggestion && (
+                <>
+                  <div className="p-6 bg-blue-900/20 border border-blue-400/20 rounded-xl">
+                    <p className="text-xs uppercase tracking-[0.2em] opacity-70 mb-2">
+                      {t("results.treatmentLabel")}
+                    </p>
+                    <p className="text-xl opacity-90">
+                      {treatment_suggestion?.care || t("results.noTreatment")}
+                    </p>
+                  </div>
+                  <div className="p-6 bg-blue-900/20 border border-blue-400/20 rounded-xl">
+                    <p className="text-xs uppercase tracking-[0.2em] opacity-70 mb-2">
+                      {t("results.treatmentLabel")}
+                    </p>
+                    <p className="text-xl opacity-90">
+                      {treatment_suggestion?.medicine ||
+                        t("results.noTreatment")}
+                    </p>
+                  </div>
+                </>
+              )}
 
               {/* GPT Explanation Section */}
               {gptExplanation && (

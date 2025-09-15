@@ -5,6 +5,8 @@
   "results": {
     "title": "Analysis Results",
     "fertilizerLabel": "Recommended Fertilizer",
+    "disease": "Predicted Disease",
+    "confidenceLabel": "Confidence",
     "treatmentLabel": "Treatment Suggestion",
     "additionalResults": "Additional Results",
     "noRecommendation": "No recommendation available",

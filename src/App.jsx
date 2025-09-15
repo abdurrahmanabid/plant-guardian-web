@@ -46,8 +46,14 @@ const App = () => {
           <Route path="/registration" element={<RegistrationForm />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/leaf-disease-predict" element={<LeafDiseasePage />} />
-          <Route path="/soil-analysis-result" element={<SoilAnalysisResult />} />
+          <Route
+            path="/leaf-disease-predict/:type"
+            element={<LeafDiseasePage />}
+          />
+          <Route
+            path="/soil-analysis-result"
+            element={<SoilAnalysisResult />}
+          />
         </Route>
       </Routes>
     </Router>

@@ -122,7 +122,7 @@ const HowTo = () => {
       button: t("mode_1_button"),
       icon: "🔍",
       clickEvent: () => {
-        navigate("/leaf-disease-predict");
+        navigate("/soil-analysis");
       },
       gradient: "from-blue-500 to-cyan-500",
     },
@@ -133,7 +133,9 @@ const HowTo = () => {
       footer: t("mode_2_footer"),
       button: t("mode_2_button"),
       icon: "🌱",
-      clickEvent: () => {},
+      clickEvent: () => {
+        navigate("/leaf-disease-predict/all");
+      },
       gradient: "from-green-500 to-emerald-500",
     },
     {
@@ -143,7 +145,9 @@ const HowTo = () => {
       footer: t("mode_3_footer"),
       button: t("mode_3_button"),
       icon: "🚀",
-      clickEvent: () => {},
+      clickEvent: () => {
+        navigate("/leaf-disease-predict/all");
+      },
       gradient: "from-purple-500 to-pink-500",
     },
   ];
