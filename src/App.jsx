@@ -18,6 +18,8 @@ import Avatar from "./components/Avatar";
 import Profile from "./components/Profile";
 import LeafDiseasePage from "./pages/LeafDiseasePage";
 import SoilAnalysisResult from "./pages/SoilAnalysisResult";
+import Saved from "./pages/Saved";
+import Search from "./pages/Search";
 import AboutUs from "./pages/AboutUs";
 import Contact from "./pages/Contact";
 const App = () => {
@@ -58,6 +60,8 @@ const App = () => {
             path="/soil-analysis-result"
             element={<SoilAnalysisResult />}
           />
+          <Route path="/saved" element={<Saved />} />
+          <Route path="/search" element={<Search />} />
         </Route>
       </Routes>
     </Router>

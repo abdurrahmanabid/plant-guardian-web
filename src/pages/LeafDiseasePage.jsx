@@ -15,6 +15,8 @@ import { useTranslation } from "react-i18next";
 import LeafSpinner from "../components/LeafSpinner";
 import api from "../hooks/api";
 import { useNavigate, useParams } from "react-router-dom";
+import i18n from "../i18n";
+import Modal from "../components/Modal";
 
 // ---------- One-time GSAP plugin registration ----------
 if (!gsap.core.globals()._leafPagePluginsRegistered) {
@@ -80,13 +82,20 @@ function mapApiToUI(apiPayload) {
 }
 
 export default function LeafDiseasePage() {
-  const { t } = useTranslation("leafPredict");
+  const { t } = useTranslation(["leafPredict", "soil-result"]);
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploadPct, setUploadPct] = useState(0);
   const [result, setResult] = useState(null);
+  const [isExplaining, setIsExplaining] = useState(false);
+  const [gptErr, setGptErr] = useState("");
+  const [gptText, setGptText] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
   const inputRef = useRef(null);
   const { type } = useParams();
   const [image, setImage] = useState();
@@ -252,6 +261,84 @@ export default function LeafDiseasePage() {
       setLoading(false);
     }
   };
+
+  // ---------- GPT Explanation ----------
+  const onExplain = useCallback(async () => {
+    if (!result) return;
+    setIsExplaining(true);
+    setGptErr("");
+    try {
+      const crop = (result.top.label || '').split('___')[0] || '';
+      const diseaseKey = result.top.label || '';
+      const diseaseLabel = crop ? t(`soilInput:diseases.${crop}.${diseaseKey}`) : diseaseKey;
+      const confidence = typeof result.top.confidence === 'number' ? result.top.confidence : undefined;
+      const care = result.treatment.care || '';
+      const medicine = result.treatment.medicine || '';
+      const isBengali = i18n.language === 'bn';
+
+      const req = {
+        content: `Analyze leaf prediction result. Disease: ${diseaseLabel || diseaseKey}. Confidence: ${confidence ?? 'N/A'}. Treatment: ${care} | ${medicine}.`,
+        systemMessage: `You're an agriculture expert. Explain simply for farmers. in json {benefit, tips, ${care || medicine ? 'whyTreatment' : ''}} provide in ${isBengali ? 'bangla' : 'english'}`,
+      };
+      const res = await api.post('/gpt/gpt-explain', req, { timeout: 30000 });
+      const raw = res?.data?.response;
+      let parsed = {};
+      if (typeof raw === 'string') {
+        try {
+          parsed = JSON.parse(raw);
+        } catch {
+          parsed = {};
+        }
+      } else if (raw && typeof raw === 'object') {
+        parsed = raw;
+      }
+      const { benefit, tips, whyTreatment } = parsed || {};
+      const out = `${whyTreatment ? `${t('soil-result:results.explainedFields.whyTreatment')}:\n${whyTreatment}\n\n` : ''}${benefit ? `${t('soil-result:results.explainedFields.benefit')}:\n${benefit}\n\n` : ''}${tips ? `${t('soil-result:results.explainedFields.tips')}:\n${tips}` : ''}`.trim();
+      setGptText(out || '');
+    } catch (e) {
+      console.error(e);
+      setGptErr(t('soil-result:gptError.failed'));
+    } finally {
+      setIsExplaining(false);
+    }
+  }, [result, t]);
+
+  // ---------- Save Functionality ----------
+  const onSave = useCallback(async () => {
+    try {
+      if (!image || !result) {
+        setAlertTitle(t('common:error'));
+        setAlertMessage(t('soil-result:save.failed'));
+        setAlertVisible(true);
+        return;
+      }
+      setSaving(true);
+      const treatment = [
+        result.treatment.care ? `care: ${result.treatment.care}` : '',
+        result.treatment.medicine ? `medicine: ${result.treatment.medicine}` : ''
+      ].filter(Boolean).join(' | ');
+
+      const payload = {
+        imageUrl: image,
+        diseaseName: result.top.label,
+        confidence: typeof result.top.confidence === 'number' ? result.top.confidence : undefined,
+        treatment: treatment || undefined,
+        description: gptText || undefined,
+      };
+
+      const res = await api.post('/model/image', payload, { withCredentials: true });
+      const ok = !!res?.data?.success;
+      setAlertTitle(ok ? t('common:success') : t('common:error'));
+      setAlertMessage(res?.data?.message || (ok ? t('common:success') : t('soil-result:save.failed')));
+      setAlertVisible(true);
+    } catch (e) {
+      setAlertTitle(t('common:error'));
+      setAlertMessage(e?.response?.data?.message || e?.message || t('soil-result:save.failed'));
+      setAlertVisible(true);
+    } finally {
+      setSaving(false);
+    }
+  }, [image, result, gptText, t]);
 
   // Keep memo if you need derived values later
   const predicted = useMemo(() => result?.top || null, [result]);
@@ -436,12 +523,77 @@ export default function LeafDiseasePage() {
                       )}
                     </div>
                   )}
+
+                  {/* GPT Explanation */}
+                  {result && (
+                    <div className="mt-4 rounded-2xl p-4 border border-white/10 bg-white/5 dark:bg-black/30">
+                      <Button
+                        thickness={3}
+                        speed="5s"
+                        onClick={onExplain}
+                        disabled={isExplaining}
+                        className="w-full"
+                      >
+                        {isExplaining ? (
+                          <div className="flex items-center justify-center">
+                            <LeafSpinner />
+                            <span className="ml-2">{t('soil-result:buttons.generating') || 'Generating...'}</span>
+                          </div>
+                        ) : (
+                          t('soil-result:buttons.gptDetails') || 'Get Detailed Explanation'
+                        )}
+                      </Button>
+                      {gptErr.trim() ? (
+                        <div className="mt-3 text-red-300 text-sm bg-red-500/10 border border-red-400/20 rounded-lg p-3">
+                          {gptErr}
+                        </div>
+                      ) : null}
+                      {gptText ? (
+                        <div className="mt-3 text-white whitespace-pre-wrap text-sm leading-relaxed">
+                          {gptText}
+                        </div>
+                      ) : null}
+                    </div>
+                  )}
+
+                  {/* Save Button */}
+                  {result && type !== "all" && (
+                    <div className="mt-4 rounded-2xl p-4 border border-white/10 bg-white/5 dark:bg-black/30">
+                      <Button
+                        thickness={3}
+                        speed="5s"
+                        onClick={onSave}
+                        disabled={saving}
+                        className="w-full"
+                      >
+                        {saving ? (
+                          <div className="flex items-center justify-center">
+                            <LeafSpinner />
+                            <span className="ml-2">{t('soil-result:buttons.saving') || 'Saving...'}</span>
+                          </div>
+                        ) : (
+                          t('soil-result:buttons.save') || 'Save Result'
+                        )}
+                      </Button>
+                    </div>
+                  )}
                 </div>
               )}
             </aside>
           )}
         </div>
       </div>
+
+      {/* Alert Modal */}
+      {alertVisible && (
+        <Modal isOpen={alertVisible} onClose={() => setAlertVisible(false)}>
+          <h2 className="text-2xl font-bold mb-4">{alertTitle}</h2>
+          <p className="mb-4">{alertMessage}</p>
+          <Button thickness={3} speed="5s" onClick={() => setAlertVisible(false)}>
+            {t('common:ok') || 'OK'}
+          </Button>
+        </Modal>
+      )}
     </section>
   );
 }

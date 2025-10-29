@@ -77,12 +77,12 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 w-full z-50 bg-[#0b061f]/40 backdrop-blur-md shadow-md border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center relative">
-        <a href="#home" className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-2">
           <img src={logo} alt="logo" height={32} width={32} />
           <p className="text-white font-semibold text-base">
             {t("common:siteName")}
           </p>
-        </a>
+        </Link>
 
         <ul className="flex items-center gap-4 text-white font-medium text-sm">
           {links.map((link) => (

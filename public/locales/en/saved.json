@@ -1,0 +1,47 @@
+{
+  "title": "Saved Results",
+  "subtitle": "Your saved analysis results and predictions",
+  "loading": "Loading saved results...",
+  "error": "Failed to load saved results",
+  "empty": "No saved results found",
+  "stats": {
+    "imageOnly": "Image Analysis",
+    "soilOnly": "Soil Analysis",
+    "soilImage": "Combined Analysis"
+  },
+  "tabs": {
+    "imageOnly": "Image Only",
+    "soilOnly": "Soil Only",
+    "soilImage": "Soil + Image"
+  },
+  "sections": {
+    "imageOnly": "Image Analysis Results",
+    "soilOnly": "Soil Analysis Results",
+    "soilImage": "Combined Analysis Results"
+  },
+  "labels": {
+    "disease": "Disease",
+    "confidence": "Confidence",
+    "treatment": "Treatment",
+    "crop": "Crop",
+    "fertilizer": "Fertilizer"
+  },
+  "details": {
+    "title": "Result Details"
+  },
+  "delete": "Delete",
+  "deleteTitle": "Delete Result",
+  "deleteConfirm": "Are you sure you want to delete this result?",
+  "deleteFailed": "Failed to delete result",
+  "cancel": "Cancel",
+  "buttons": {
+    "explain": "Get AI Explanation",
+    "generating": "Generating...",
+    "close": "Close"
+  },
+  "explanation": {
+    "title": "AI Explanation",
+    "error": "Failed to get explanation",
+    "noExplanation": "No explanation available"
+  }
+}

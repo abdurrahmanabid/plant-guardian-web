@@ -9,7 +9,7 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: 'en',
-    ns: ['navbar', 'common', 'home', 'howTo', 'soil-input', 'loading', 'authentication', 'registration', 'login'],
+    ns: ['navbar', 'common', 'home', 'howTo', 'soil-input', 'loading', 'authentication', 'registration', 'login', 'leafPredict', 'soil-result', 'saved', 'search', 'profile', 'auth'],
     defaultNS: 'common',
     backend: {
       loadPath: '/locales/{{lng}}/{{ns}}.json'

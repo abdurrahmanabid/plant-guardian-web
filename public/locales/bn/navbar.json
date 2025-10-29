@@ -1,7 +1,29 @@
 {
   "links": [
-    { "key": "home", "label": "হোম", "url": "/" },
-    { "key": "about", "label": "আমাদের সম্পর্কে", "url": "/about" },
-    { "key": "contact", "label": "যোগাযোগ", "url": "/contact" }
+    {
+      "key": "home",
+      "label": "হোম",
+      "url": "/"
+    },
+    {
+      "key": "saved",
+      "label": "সংরক্ষিত",
+      "url": "/saved"
+    },
+    {
+      "key": "about",
+      "label": "আমাদের সম্পর্কে",
+      "url": "/about-us"
+    },
+    {
+      "key": "contact",
+      "label": "যোগাযোগ",
+      "url": "/contact"
+    },
+    {
+      "key": "search",
+      "label": "অনুসন্ধান",
+      "url": "/search"
+    }
   ]
 }

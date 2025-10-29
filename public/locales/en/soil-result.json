@@ -1,7 +1,6 @@
 {
   "title": "Soil Analysis - Results",
   "subtitle": "Your soil analysis results and recommendations",
-
   "results": {
     "title": "Analysis Results",
     "fertilizerLabel": "Recommended Fertilizer",
@@ -19,27 +18,31 @@
       "tips": "Tips"
     }
   },
-
   "inputData": {
     "title": "Input Data Summary",
     "noData": "No input data available"
   },
-
   "error": {
     "title": "Error",
     "tryAgain": "Try Again"
   },
-
   "buttons": {
     "newAnalysis": "New Analysis",
     "gptDetails": "Get AI Explanation",
-    "generating": "Generating..."
+    "generating": "Generating...",
+    "save": "Save Result",
+    "saving": "Saving..."
   },
   "gptError": {
     "failed": "Failed to get explanation. Please try again.",
     "noExplanation": "No explanation was returned."
   },
-
+  "save": {
+    "missingSoilForm": "Soil form data is missing. Cannot save result.",
+    "savedSoilOnly": "Soil analysis result saved successfully!",
+    "savedSoilImage": "Soil and image analysis result saved successfully!",
+    "failed": "Failed to save result. Please try again."
+  },
   "fields": {
     "temperature": "Temperature",
     "ph": "pH Level",

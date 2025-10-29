@@ -1,3 +1,6 @@
 {
-  "siteName": "PlantGuardian"
+  "siteName": "PlantGuardian",
+  "error": "Error",
+  "success": "Success",
+  "ok": "OK"
 }

@@ -122,7 +122,7 @@ const HowTo = () => {
       button: t("mode_1_button"),
       icon: "🔍",
       clickEvent: () => {
-        navigate("/soil-analysis");
+        navigate("/leaf-disease-predict/leaf");
       },
       gradient: "from-blue-500 to-cyan-500",
     },
@@ -134,7 +134,7 @@ const HowTo = () => {
       button: t("mode_2_button"),
       icon: "🌱",
       clickEvent: () => {
-        navigate("/leaf-disease-predict/all");
+        navigate("/soil-analysis");
       },
       gradient: "from-green-500 to-emerald-500",
     },

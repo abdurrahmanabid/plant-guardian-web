@@ -1,0 +1,14 @@
+{
+  "title": "Search Results",
+  "subtitle": "Find your saved analysis results",
+  "byDisease": "Search by disease, crop, or treatment",
+  "diseasePlaceholder": "Enter disease name, crop, or treatment...",
+  "searchBtn": "Search",
+  "recentBtn": "Show Recent Results",
+  "resultsTitle": "Search Results",
+  "empty": "No results found",
+  "error": "Failed to load results",
+  "labels": {
+    "savedAt": "Saved at"
+  }
+}

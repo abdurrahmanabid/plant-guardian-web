@@ -9,6 +9,7 @@ import rightLeaf from "../assets/img/hero-right-leaf.png";
 import Button from "../components/Button";
 import api from "../hooks/api";
 import { prettyLabel } from "../utils/prellyLebel";
+import Modal from "../components/Modal";
 
 // ---------- One-time GSAP plugin registration ----------
 if (!gsap.core.globals()._soilResultPluginsRegistered) {
@@ -17,7 +18,7 @@ if (!gsap.core.globals()._soilResultPluginsRegistered) {
 }
 
 const SoilAnalysisResult = () => {
-  const { t } = useTranslation("soil-result");
+  const { t } = useTranslation(["soil-result", "common"]);
   const location = useLocation();
   const navigate = useNavigate();
   const {
@@ -33,6 +34,15 @@ const SoilAnalysisResult = () => {
   const [gptExplanation, setGptExplanation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [gptError, setGptError] = useState("");
+  
+  // State for save functionality
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [saveMsg, setSaveMsg] = useState("");
+  const [saveErr, setSaveErr] = useState("");
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
 
   const titleRef = useRef(null);
   const resultRef = useRef(null);
@@ -206,6 +216,120 @@ const SoilAnalysisResult = () => {
     }
   };
 
+  // ---------- Dual Endpoint Save Functionality ----------
+  const onSave = async () => {
+    setSaveMsg("");
+    setSaveErr("");
+    setSaving(true);
+    try {
+      // Common validation
+      if (!formData) {
+        const msg = t("save.missingSoilForm");
+        setSaveErr(msg);
+        setAlertTitle(t("common:error"));
+        setAlertMessage(msg);
+        setAlertVisible(true);
+        return;
+      }
+
+      // Choose endpoint by image presence
+      const hasImage = !!disease && String(disease).trim().length > 0;
+      const endpoints = ["/soil-model/save", "/soil-and-image-model/save"];
+      
+      // Debug logging
+      console.log("Save data:", {
+        formData,
+        disease,
+        predicted_fertilizer,
+        treatment_suggestion,
+        confidence,
+        hasImage
+      });
+      
+      if (hasImage) {
+        // POST /api/soil-and-image-model/save
+        const payload = {
+          temperature: formData.temperature || 0,
+          phLevel: formData.ph || 0,
+          soilColor: formData.soilColor || "unknown",
+          rainfall: formData.rainfall || 0,
+          nitrogen: formData.nitrogen || 0,
+          phosphorous: formData.phosphorus || 0,
+          confidence: confidence || 0,
+          potassium: formData.potassium || 0,
+          cropType: formData.crop || "unknown",
+          diseaseDetected: disease || "unknown",
+          imageUrl: disease || "unknown", // Using disease as image URL for now
+          recommendedFertilizer: predicted_fertilizer || "No recommendation",
+          treatmentSuggestion: treatment_suggestion 
+            ? [treatment_suggestion.care, treatment_suggestion.medicine].filter(Boolean).join(" | ")
+            : undefined,
+        };
+        console.log("Soil+Image payload:", payload);
+        const res = await api.post(endpoints[1], payload, {
+          withCredentials: true,
+        });
+        if (res?.data?.success) {
+          const msg = t("save.savedSoilImage");
+          setSaveMsg(msg);
+          setSaved(true);
+          setAlertTitle(t("common:success"));
+          setAlertMessage(msg);
+          setAlertVisible(true);
+        } else {
+          const msg = t("save.failed");
+          setSaveErr(msg);
+          setAlertTitle(t("common:error"));
+          setAlertMessage(msg);
+          setAlertVisible(true);
+        }
+      } else {
+        // POST /api/soil-model/save
+        const payload = {
+          temperature: formData.temperature || 0,
+          phLevel: formData.ph || 0,
+          soilColor: formData.soilColor || "unknown",
+          rainfall: formData.rainfall || 0,
+          nitrogen: formData.nitrogen || 0,
+          phosphorous: formData.phosphorus || 0,
+          potassium: formData.potassium || 0,
+          cropType: formData.crop || "unknown",
+          predictedFertilizer: predicted_fertilizer || "No recommendation",
+          predictedTreatment: treatment_suggestion 
+            ? [treatment_suggestion.care, treatment_suggestion.medicine].filter(Boolean).join(" | ")
+            : undefined,
+          confidence: typeof confidence === "number" ? confidence : undefined,
+        };
+        console.log("Soil-only payload:", payload);
+        const res = await api.post(endpoints[0], payload, {
+          withCredentials: true,
+        });
+        if (res?.data?.success) {
+          const msg = t("save.savedSoilOnly");
+          setSaveMsg(msg);
+          setSaved(true);
+          setAlertTitle(t("common:success"));
+          setAlertMessage(msg);
+          setAlertVisible(true);
+        } else {
+          const msg = t("save.failed");
+          setSaveErr(msg);
+          setAlertTitle(t("common:error"));
+          setAlertMessage(msg);
+          setAlertVisible(true);
+        }
+      }
+    } catch (e) {
+      const msg = (e instanceof Error && e.message) || t("save.failed");
+      setSaveErr(msg);
+      setAlertTitle(t("common:error"));
+      setAlertMessage(msg);
+      setAlertVisible(true);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (error) {
     return (
       <section
@@ -292,7 +416,7 @@ const SoilAnalysisResult = () => {
             <h3 className="text-xl font-semibold mb-6">{t("results.title")}</h3>
 
             <div ref={resultRef} className="space-y-6">
-              <div className="p-6 bg-green-900/20 border border-green-400/20 rounded-xl">
+              {confidence &&<div className="p-6 bg-green-900/20 border border-green-400/20 rounded-xl">
                 <p className="text-xs uppercase tracking-[0.2em] opacity-70 mb-2">
                   {t("results.disease")}
                 </p>
@@ -303,7 +427,7 @@ const SoilAnalysisResult = () => {
                   {t("results.confidenceLabel")}:{" "}
                   {Math.round(confidence * 100) + "%" || null}
                 </p>
-              </div>
+              </div>}
               <div className="p-6 bg-green-900/20 border border-green-400/20 rounded-xl">
                 <p className="text-xs uppercase tracking-[0.2em] opacity-70 mb-2">
                   {t("results.fertilizerLabel")}
@@ -411,6 +535,26 @@ const SoilAnalysisResult = () => {
 
             {/* Action Buttons */}
             <div className="flex flex-col gap-3 mt-8 pt-6 border-t border-white/10">
+              {/* Save Button - only show if not already saved */}
+              {!saved && (
+                <Button
+                  thickness={2}
+                  speed="5s"
+                  onClick={onSave}
+                  disabled={saving}
+                  className="w-full"
+                >
+                  {saving ? (
+                    <span className="flex items-center justify-center">
+                      <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>
+                      {t("buttons.saving")}
+                    </span>
+                  ) : (
+                    t("buttons.save")
+                  )}
+                </Button>
+              )}
+              
               <Button
                 thickness={2}
                 speed="5s"
@@ -423,6 +567,17 @@ const SoilAnalysisResult = () => {
           </aside>
         </div>
       </div>
+
+      {/* Alert Modal */}
+      {alertVisible && (
+        <Modal isOpen={alertVisible} onClose={() => setAlertVisible(false)}>
+          <h2 className="text-2xl font-bold mb-4">{alertTitle}</h2>
+          <p className="mb-4">{alertMessage}</p>
+          <Button thickness={3} speed="5s" onClick={() => setAlertVisible(false)}>
+            {t("common:ok") || 'OK'}
+          </Button>
+        </Modal>
+      )}
     </section>
   );
 };

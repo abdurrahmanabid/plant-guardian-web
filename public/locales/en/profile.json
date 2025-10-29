@@ -9,5 +9,9 @@
   "emailBtn": "Email",
   "callBtn": "Call",
   "updateBtn": "Update Profile",
-  "aboutText": "{{name}} is a {{role}} based in {{city}}, {{state}}. This profile card follows the same motion and visual language as the Hero section (gradient title, parallax leaves, and smooth entrance), so it feels cohesive with the rest of the site."
+  "aboutText": "{{name}} is a {{role}} based in {{city}}, {{state}}. This profile card follows the same motion and visual language as the Hero section (gradient title, parallax leaves, and smooth entrance), so it feels cohesive with the rest of the site.",
+  "noProfile": {
+    "title": "No Profile Found",
+    "message": "Please log in to view your saved results"
+  }
 }
