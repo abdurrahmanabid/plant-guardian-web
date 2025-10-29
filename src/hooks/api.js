@@ -2,16 +2,21 @@ import axios from 'axios';
 
 // Create an instance with your base URL
 const api = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL, // 🔁 Replace with your actual backend URL
-  timeout: 10000, // Optional: sets request timeout to 10 seconds
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  withCredentials: true,                // জরুরি
+  baseURL: import.meta.env.VITE_BACKEND_URL, // আপনার backend URL (https://...)
+  timeout: 10000,
+  headers: { 'Content-Type': 'application/json' },
+  withCredentials: false, // Token-based auth: credentials দরকার নেই
 });
 
-// Optional: Add interceptors for auth token, error handling, etc.
-// api.interceptors.request.use(...)
+// Attach Bearer token if present
+api.interceptors.request.use((config) => {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  if (token) {
+    config.headers = config.headers || {};
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+});
 // api.interceptors.response.use(...)
 
 export default api;
